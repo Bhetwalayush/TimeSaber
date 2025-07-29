@@ -27,7 +27,7 @@ const MyProfile = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:3000/api/users/profile', {
+        const response = await axios.get('https://localhost:3000/api/users/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
             'Cache-Control': 'no-cache'
@@ -127,7 +127,7 @@ const MyProfile = () => {
       if (selectedFile) {
         const formDataToUpload = new FormData();
         formDataToUpload.append('image', selectedFile);
-        const uploadResponse = await axios.post('http://localhost:3000/api/users/uploadImage', formDataToUpload, {
+        const uploadResponse = await axios.post('https://localhost:3000/api/users/uploadImage', formDataToUpload, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -136,7 +136,7 @@ const MyProfile = () => {
         newProfilePicture = uploadResponse.data.data;
       }
 
-      await axios.put('http://localhost:3000/api/users/profile', {
+      await axios.put('https://localhost:3000/api/users/profile', {
         first_name: formData.firstName,
         last_name: formData.lastName,
         country: formData.country,
@@ -174,7 +174,7 @@ const MyProfile = () => {
                 <div className="w-48 h-48 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
                   {formData.profile_picture ? (
                     <img
-                      src={`http://localhost:3000/profile/${formData.profile_picture}`}
+                      src={`https://localhost:3000/profile/${formData.profile_picture}`}
                       alt="Profile"
                       className="w-full h-full object-cover rounded-full"
                     />

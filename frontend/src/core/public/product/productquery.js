@@ -6,7 +6,7 @@ export const useGetprod = () => {
     return useQuery({
         queryKey: ["GET_PROD_LIST"],
         queryFn: () => {
-            return axios.get("http://localhost:3000/api/items/");
+            return axios.get("https://localhost:3000/api/items/");
         },
     });
 };
@@ -59,7 +59,7 @@ export const useCartprod = () => {
                 throw new Error("User not logged in");
             }
             return axios.post(
-                "http://localhost:3000/api/cart",
+                "https://localhost:3000/api/cart",
                 {
                     userId,
                     items: [{ itemId, quantity }],
@@ -79,7 +79,7 @@ export const useAddToWishlist = () => {
     return useMutation({
         mutationFn: ({ productId, userId }) =>
             axios.post(
-                "http://localhost:3000/api/wishlist",
+                "https://localhost:3000/api/wishlist",
                 { productId, userId },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             ),
@@ -94,7 +94,7 @@ export const useRemoveFromWishlist = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ productId, userId }) =>
-            axios.delete(`http://localhost:3000/api/wishlist/${productId}`, {
+            axios.delete(`https://localhost:3000/api/wishlist/${productId}`, {
                 data: { userId },
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             }),
@@ -113,7 +113,7 @@ export const useGetWishlist = () => {
             if (!userId) {
                 throw new Error("User not logged in");
             }
-            const { data } = await axios.get('http://localhost:3000/api/wishlist', {
+            const { data } = await axios.get('https://localhost:3000/api/wishlist', {
                 params: { userId },
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             });

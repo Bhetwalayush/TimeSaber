@@ -183,7 +183,7 @@ export const Haircare = () => {
                   </IconButton>
                 </div>
                 <img
-                  src={`http://localhost:3000/uploads/${product.image}`}
+                  src={`https://localhost:3000/uploads/${product.image}`}
                   alt={product.item_name}
                   className="max-h-30 w-full object-contain"
                 />
@@ -277,7 +277,7 @@ export const Haircare = () => {
             </DialogHeader>
             <DialogBody className="flex flex-col gap-4">
               <img
-                src={`http://localhost:3000/uploads/${selectedProduct.image}`}
+                src={`https://localhost:3000/uploads/${selectedProduct.image}`}
                 alt={selectedProduct.item_name}
                 className="w-full h-64 object-contain rounded-lg"
               />
@@ -524,7 +524,7 @@ export const haircare = () => {
                 </IconButton>
               </div>
               <img
-                src={`http://localhost:3000/uploads/${product.image}`}
+                src={`https://localhost:3000/uploads/${product.image}`}
                 alt={product.item_name}
                 className="max-h-30 w-full object-contain"
               />
@@ -623,7 +623,7 @@ export const haircare = () => {
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
             <img
-              src={`http://localhost:3000/uploads/${selectedProduct.image}`}
+              src={`https://localhost:3000/uploads/${selectedProduct.image}`}
               alt={selectedProduct.item_name}
               className="w-full h-64 object-contain rounded-lg"
             />

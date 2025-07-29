@@ -28,11 +28,33 @@ const Signup = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [userEmail, setUserEmail] = useState('');
 
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
+  const checkPasswordStrength = (password) => {
+    const strengthConditions = [
+      /[a-z]/.test(password),
+      /[A-Z]/.test(password),
+      /[0-9]/.test(password),
+      /[^A-Za-z0-9]/.test(password),
+      password.length >= 8,
+    ];
+    const passed = strengthConditions.filter(Boolean).length;
+    if (passed <= 2) return 'Weak';
+    if (passed === 3 || passed === 4) return 'Medium';
+    return 'Strong';
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value));
+    }
   };
 
   const validateForm = () => {
@@ -68,7 +90,7 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/users/signup', {
+      const response = await fetch('https://localhost:3000/api/users/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -78,8 +100,6 @@ const Signup = () => {
 
       setUserEmail(formData.email);
       setShowOtpModal(true);
-      // toast.success('Signup successful! Redirecting to login...');
-      // setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
       setError(err.message);
       toast.error('Signup failed. Please try again.');
@@ -93,7 +113,6 @@ const Signup = () => {
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-cyan-200 to-white px-4 py-10">
         <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-lg w-full max-w-5xl overflow-hidden">
-          {/* Left Logo Section */}
           <div className="md:w-1/2 flex flex-col items-center justify-center bg-gradient-to-br from-cyan-200 to-white p-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">Time Saber</h1>
             <img
@@ -103,8 +122,7 @@ const Signup = () => {
             />
           </div>
 
-          {/* Right Form Section */}
-          <div className="md:w-1/2 flex items-center justify-center  p-8">
+          <div className="md:w-1/2 flex items-center justify-center p-8">
             <form
               onSubmit={handleSubmit}
               className="w-full max-w-md space-y-4"
@@ -176,6 +194,8 @@ const Signup = () => {
                     placeholder="Password *"
                     value={formData.password}
                     onChange={handleChange}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
                     className="p-2 border rounded-xl w-full"
                   />
                   <span
@@ -184,6 +204,29 @@ const Signup = () => {
                   >
                     {showPassword ? '😉' : '😌'}
                   </span>
+                  {passwordFocused && (
+                    <div className="mt-1 text-xs px-2 py-1 bg-gray-100 border rounded border-gray-300">
+                      <p>
+                        Strength:{' '}
+                        <span className={
+                          passwordStrength === 'Strong' ? 'text-green-600 font-semibold' :
+                          passwordStrength === 'Medium' ? 'text-yellow-600 font-semibold' :
+                          'text-red-600 font-semibold'
+                        }>
+                          {passwordStrength}
+                        </span>
+                      </p>
+                      {passwordStrength !== 'Strong' && (
+                        <ul className="list-disc ml-4 text-gray-600">
+                          {!/[A-Z]/.test(formData.password) && <li>Atleast one uppercase letters</li>}
+                          {!/[a-z]/.test(formData.password) && <li>Atleast one lowercase letters</li>}
+                          {!/[0-9]/.test(formData.password) && <li>Include numbers(0-9)</li>}
+                          {!/[^A-Za-z0-9]/.test(formData.password) && <li>Use special characters(e.g. @,#,!)</li>}
+                          {formData.password.length < 8 && <li>At least 8 characters</li>}
+                        </ul>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="relative w-full">
                   <input
@@ -223,16 +266,16 @@ const Signup = () => {
       </div>
       <ToastContainer />
       <Footer />
-       {showOtpModal && (
-  <OTPModal
-    email={userEmail}
-    onSuccess={() => {
-      toast.success('OTP verified. Redirecting to login...');
-      setShowOtpModal(false);
-      setTimeout(() => navigate('/login'), 3000);
-    }}
-  />
-)}
+      {showOtpModal && (
+        <OTPModal
+          email={userEmail}
+          onSuccess={() => {
+            toast.success('OTP verified. Redirecting to login...');
+            setShowOtpModal(false);
+            setTimeout(() => navigate('/login'), 3000);
+          }}
+        />
+      )}
     </div>
   );
 };

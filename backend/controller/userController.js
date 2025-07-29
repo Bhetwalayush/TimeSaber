@@ -215,7 +215,7 @@ const forgotPassword = async (req, res) => {
             }
         });
 
-        const resetLink = `http://localhost:5000/resetpassword?token=${resetToken}`;
+        const resetLink = `https://localhost:5000/resetpassword?token=${resetToken}`;
         const mailOptions = {
             from: '"TimeSaber" <process.env.EMAIL_USER>',
             to: email,

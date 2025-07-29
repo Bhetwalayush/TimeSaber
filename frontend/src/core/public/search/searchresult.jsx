@@ -77,7 +77,7 @@ const SearchResults = () => {
   const fetchSearchResults = async (query) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/items/search?query=${encodeURIComponent(query)}`
+        `https://localhost:3000/api/items/search?query=${encodeURIComponent(query)}`
       );
       const data = await response.json();
       setSearchResults(data);
@@ -185,7 +185,7 @@ const SearchResults = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/items/search?query=${query}`
+        `https://localhost:3000/api/items/search?query=${query}`
       );
       const data = await response.json();
       setSearchResults(data);
@@ -458,7 +458,7 @@ const SearchResults = () => {
                           )}
                         </Button></div><div>
                         <img
-                          src={item.image ? `http://localhost:3000/uploads/${item.image}` : '/api/placeholder/300/300'}
+                          src={item.image ? `https://localhost:3000/uploads/${item.image}` : '/api/placeholder/300/300'}
                           alt={item.item_name}
                           className="h-full w-full object-cover"
                         /></div>

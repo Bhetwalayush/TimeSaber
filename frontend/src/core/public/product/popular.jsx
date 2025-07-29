@@ -183,7 +183,7 @@ export const WomanCare = () => {
                   </IconButton>
                 </div>
                 <img
-                  src={`http://localhost:3000/uploads/${product.image}`}
+                  src={`https://localhost:3000/uploads/${product.image}`}
                   alt={product.item_name}
                   className="max-h-30 w-full object-contain"
                 />
@@ -277,7 +277,7 @@ export const WomanCare = () => {
             </DialogHeader>
             <DialogBody className="flex flex-col gap-4">
               <img
-                src={`http://localhost:3000/uploads/${selectedProduct.image}`}
+                src={`https://localhost:3000/uploads/${selectedProduct.image}`}
                 alt={selectedProduct.item_name}
                 className="w-full h-64 object-contain rounded-lg"
               />
@@ -534,7 +534,7 @@ export const Womancare = () => {
                 </IconButton>
               </div>
               <img
-                src={`http://localhost:3000/uploads/${product.image}`}
+                src={`https://localhost:3000/uploads/${product.image}`}
                 alt={product.item_name}
                 className="max-h-30 w-full object-contain"
               />
@@ -633,7 +633,7 @@ export const Womancare = () => {
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
             <img
-              src={`http://localhost:3000/uploads/${selectedProduct.image}`}
+              src={`https://localhost:3000/uploads/${selectedProduct.image}`}
               alt={selectedProduct.item_name}
               className="w-full h-64 object-contain rounded-lg"
             />

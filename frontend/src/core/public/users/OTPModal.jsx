@@ -9,7 +9,7 @@ const OTPModal = ({ email, onSuccess }) => {
   const handleVerify = async () => {
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:3000/api/users/verify-otp', { email, otp });
+      const res = await axios.post('https://localhost:3000/api/users/verify-otp', { email, otp });
       onSuccess();
     } catch (err) {
       setError('Invalid OTP');

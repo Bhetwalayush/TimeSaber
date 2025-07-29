@@ -196,7 +196,7 @@ const Wishlist = () => {
                     </IconButton>
                   </div>
                   <img
-                    src={`http://localhost:3000/uploads/${item.product.image}`}
+                    src={`https://localhost:3000/uploads/${item.product.image}`}
                     alt={item.product.item_name}
                     className="max-h-30 w-full object-contain"
                   />
@@ -289,7 +289,7 @@ const Wishlist = () => {
             </DialogHeader>
             <DialogBody className="flex flex-col gap-4">
               <img
-                src={`http://localhost:3000/uploads/${selectedProduct.image}`}
+                src={`https://localhost:3000/uploads/${selectedProduct.image}`}
                 alt={selectedProduct.item_name}
                 className="w-full h-64 object-contain rounded-lg"
               />
