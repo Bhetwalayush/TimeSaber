@@ -35,7 +35,7 @@ const Ordercart = () => {
             const token = localStorage.getItem("token");
             if (userId && token) {
                 const response = await axios.get(
-                    `http://localhost:3000/api/cart/user/${userId}`,
+                    `https://localhost:3000/api/cart/user/${userId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ const Ordercart = () => {
 
     const handleDelete = async (cartId, itemId) => {
         try {
-            await axios.delete(`http://localhost:3000/api/cart/${cartId}/item/${itemId}`, {
+            await axios.delete(`https://localhost:3000/api/cart/${cartId}/item/${itemId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -97,7 +97,7 @@ const Ordercart = () => {
 
         try {
             await axios.put(
-                `http://localhost:3000/api/cart/${cartId}/item/${itemId}`,
+                `https://localhost:3000/api/cart/${cartId}/item/${itemId}`,
                 { quantity: newQuantity },
                 {
                     headers: {
@@ -187,7 +187,7 @@ const Ordercart = () => {
             const totalAmount = calculateTotalAmount(cartItems);
 
             const orderResponse = await axios.post(
-                `http://localhost:3000/api/order/`,
+                `https://localhost:3000/api/order/`,
                 {
                     userId,
                     address,
@@ -201,7 +201,7 @@ const Ordercart = () => {
             );
 
             const orderId = orderResponse.data._id;
-            const url = `http://localhost:3000/api/order/create/${orderId}`;
+            const url = `https://localhost:3000/api/order/create/${orderId}`;
 
             const paymentData = {
                 amount: totalAmount,
@@ -286,7 +286,7 @@ const Ordercart = () => {
                                                     <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
                                                         {item.itemId?.image ? (
                                                             <img
-                                                                src={`http://localhost:3000/uploads/${item.itemId.image}`}
+                                                                src={`https://localhost:3000/uploads/${item.itemId.image}`}
                                                                 alt={item.itemId?.item_name || "Product"}
                                                                 className="w-full h-full object-cover rounded-lg"
                                                             />

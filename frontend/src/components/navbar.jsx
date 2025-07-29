@@ -28,7 +28,7 @@ const Navbar = () => {
       const userId = localStorage.getItem("id");
       const token = localStorage.getItem("token");
       if (userId && token) {
-        const response = await axios.get(`http://localhost:3000/api/cart/user/${userId}`, {
+        const response = await axios.get(`https://localhost:3000/api/cart/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const items = response.data[0]?.items || [];
@@ -45,7 +45,7 @@ const Navbar = () => {
       const userId = localStorage.getItem("id");
       const token = localStorage.getItem("token");
       if (userId && token) {
-        const response = await axios.get(`http://localhost:3000/api/wishlist?userId=${userId}`, {
+        const response = await axios.get(`https://localhost:3000/api/wishlist?userId=${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setWishlistCount(response.data.wishlist.length || 0);

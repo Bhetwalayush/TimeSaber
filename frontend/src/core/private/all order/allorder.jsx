@@ -32,7 +32,7 @@ function Allorder() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/order', {
+            const response = await axios.get('https://localhost:3000/api/order', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -48,7 +48,7 @@ function Allorder() {
     // Delete order
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/api/order/${id}`, {
+            await axios.delete(`https://localhost:3000/api/order/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },

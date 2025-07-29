@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    host:'0.0.0.0',
+    // host:'0.0.0.0',
     port: 5000,
      https: {
       key: fs.readFileSync('./.cert/key.pem'),
