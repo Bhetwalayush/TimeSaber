@@ -26,7 +26,7 @@ function MyOrders() {
 
     const fetchOrders = async (userId) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/order/user/${userId}`, {
+            const response = await axios.get(`https://localhost:3000/api/order/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -41,7 +41,7 @@ function MyOrders() {
 
     const handleCancelOrder = async (orderId) => {
         try {
-            await axios.delete(`http://localhost:3000/api/order/${orderId}`, {
+            await axios.delete(`https://localhost:3000/api/order/${orderId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },

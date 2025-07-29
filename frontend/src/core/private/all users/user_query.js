@@ -6,7 +6,7 @@ export const useGetUser = () => {
     return useQuery({
         queryKey: ["GET_USER_LIST"],
         queryFn: () => {
-            return axios.get("http://localhost:3000/api/users/getuser", {
+            return axios.get("https://localhost:3000/api/users/getuser", {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },

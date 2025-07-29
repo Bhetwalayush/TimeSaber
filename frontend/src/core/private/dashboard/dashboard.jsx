@@ -36,7 +36,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         // This is a mock API call - replace with your actual endpoint
-        const response = await fetch('http://localhost:3000/api/admin/stats');
+        const response = await fetch('https://localhost:3000/api/admin/stats');
         const data = await response.json();
         setStats({
           users: data.users || 150,

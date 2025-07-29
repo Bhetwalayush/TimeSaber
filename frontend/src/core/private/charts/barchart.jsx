@@ -16,7 +16,7 @@ const BarChart = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/admin/stats');
+                const response = await fetch('https://localhost:3000/api/admin/stats');
                 const data = await response.json();
                 setStats({
                     users: data.users || 150,

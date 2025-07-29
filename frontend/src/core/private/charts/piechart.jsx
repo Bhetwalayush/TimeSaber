@@ -1,4 +1,4 @@
-import { ArcElement, Chart as ChartJS, Legend, Tooltip, Title } from 'chart.js';
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import Side from '../../../components/sidebar';
@@ -16,7 +16,7 @@ const PieChart = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/stats');
+        const response = await fetch('https://localhost:3000/api/admin/stats');
         const data = await response.json();
         setStats({
           users: data.users || 150,

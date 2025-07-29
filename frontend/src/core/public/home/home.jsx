@@ -32,7 +32,7 @@ const Home = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/items/search?query=${query}`, {
+            const response = await fetch(`https://localhost:3000/api/items/search?query=${query}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -130,7 +130,7 @@ const Home = () => {
                                     >
                                         <CardHeader shadow={false} floated={false} className="h-48">
                                             <img
-                                                src={`http://localhost:3000/uploads/${item.image}`}
+                                                src={`https://localhost:3000/uploads/${item.image}`}
                                                 alt={item.item_name}
                                                 className="h-full w-full object-fill"
                                             />
