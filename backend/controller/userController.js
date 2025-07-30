@@ -7,6 +7,7 @@ const Creadential = require('../model/Users');
 const nodemailer = require("nodemailer")
 require("dotenv").config();
  const Otp = require('../model/otp'); 
+const AuditLog = require('../model/auditLog');
 
 const signUp = async (req, res) => {
     try {
@@ -77,7 +78,6 @@ const signUp = async (req, res) => {
 };
 
 const login = async (req, res) => {
-
     try {
         const { email, password } = req.body;
 
@@ -91,10 +91,108 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "User not found. Please sign up." });
         }
 
-        const isMatch = await bcrypt.compare(password, user.confirm_password);
-        if (!isMatch) {
-            return res.status(401).json({ message: "Invalid email or password" });
+        // Check if account is locked
+        if (user.lockUntil && user.lockUntil > Date.now()) {
+            const remainingTime = Math.ceil((user.lockUntil - Date.now()) / 1000 / 60);
+            
+            // Log account lock attempt
+            const lockAuditEntry = new AuditLog({
+                userId: user._id,
+                userEmail: user.email,
+                userName: `${user.first_name} ${user.last_name}`,
+                action: 'ACCOUNT_LOCKED',
+                details: {
+                    address: user.address,
+                    country: user.country,
+                    region_state: user.region_state,
+                    phone: user.phone,
+                    reason: 'Attempted login while account was locked',
+                    remainingLockTime: remainingTime
+                },
+                ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip,
+                userAgent: req.headers['user-agent']
+            });
+            lockAuditEntry.save().catch(err => console.error('Error saving lock audit log:', err));
+            
+            return res.status(423).json({ 
+                message: `Account is locked. Please try again in ${remainingTime} minutes.`,
+                lockedUntil: user.lockUntil
+            });
         }
+
+        // Reset lock if lock period has expired
+        if (user.lockUntil && user.lockUntil <= Date.now()) {
+            user.loginAttempts = 0;
+            user.lockUntil = null;
+            await user.save();
+        }
+
+        const isMatch = await bcrypt.compare(password, user.confirm_password);
+        
+        if (!isMatch) {
+            // Increment failed login attempts
+            user.loginAttempts += 1;
+            
+            // Log failed login attempt
+            const failedAuditEntry = new AuditLog({
+                userId: user._id,
+                userEmail: user.email,
+                userName: `${user.first_name} ${user.last_name}`,
+                action: 'LOGIN_FAILED',
+                details: {
+                    address: user.address,
+                    country: user.country,
+                    region_state: user.region_state,
+                    phone: user.phone,
+                    attemptNumber: user.loginAttempts,
+                    remainingAttempts: 3 - user.loginAttempts
+                },
+                ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip,
+                userAgent: req.headers['user-agent']
+            });
+            failedAuditEntry.save().catch(err => console.error('Error saving failed login audit log:', err));
+            
+            // Check if account should be locked (3 failed attempts)
+            if (user.loginAttempts >= 3) {
+                user.lockUntil = new Date(Date.now() + 2 * 60 * 1000); // Lock for 2 minutes
+                await user.save();
+                
+                // Log account lock
+                const lockAuditEntry = new AuditLog({
+                    userId: user._id,
+                    userEmail: user.email,
+                    userName: `${user.first_name} ${user.last_name}`,
+                    action: 'ACCOUNT_LOCKED',
+                    details: {
+                        address: user.address,
+                        country: user.country,
+                        region_state: user.region_state,
+                        phone: user.phone,
+                        reason: 'Too many failed login attempts',
+                        lockDuration: '2 minutes',
+                        lockUntil: user.lockUntil
+                    },
+                    ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip,
+                    userAgent: req.headers['user-agent']
+                });
+                lockAuditEntry.save().catch(err => console.error('Error saving account lock audit log:', err));
+                
+                return res.status(423).json({ 
+                    message: "Account locked due to too many failed attempts. Please try again in 2 minutes.",
+                    lockedUntil: user.lockUntil
+                });
+            }
+            
+            await user.save();
+            return res.status(401).json({ 
+                message: `Invalid email or password. ${3 - user.loginAttempts} attempts remaining.` 
+            });
+        }
+
+        // Successful login - reset attempts
+        user.loginAttempts = 0;
+        user.lockUntil = null;
+        await user.save();
 
         const token = jwt.sign(
             { userId: user._id, email: user.email, role: user.role, name: user.full_name, image: user.profile_picture },
