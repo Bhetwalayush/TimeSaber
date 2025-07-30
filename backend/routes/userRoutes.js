@@ -1,22 +1,33 @@
 const express = require('express');
 const { signUp, login, logout, uploadImage,getuser,getProfile, updateProfile,forgotPassword,resetPassword,verifyOtp } = require('../controller/userController');
 const router = express.Router();
-const upload = require("../middleware/uploads");
+const { uploadProfilePicture, uploadProfilePictureAlt, handleUploadError } = require("../middleware/uploads");
 const { authorization } = require('../security/auth');
 const { logLogin, logLogout } = require('../middleware/auditLogger');
+const { 
+    validate, 
+    signUpSchema, 
+    loginSchema, 
+    updateProfileSchema, 
+    forgotPasswordSchema, 
+    resetPasswordSchema, 
+    verifyOtpSchema 
+} = require('../validation/userValidation');
 
-
-// const uploadImage = require("../controller/creadController");
-
-
-router.post('/login', logLogin, login);
+// User routes with validation and secure file uploads
+router.post('/login', validate(loginSchema), logLogin, login);
 router.post('/logout', authorization, logLogout, logout);
-router.post('/signup', signUp);
-router.post('/uploadImage', upload, uploadImage);
+router.post('/signup', validate(signUpSchema), signUp);
+
+// Upload routes - handle both field names
+router.post('/uploadImage', uploadProfilePicture, handleUploadError, uploadImage);
+router.post('/uploadProfilePicture', uploadProfilePictureAlt, handleUploadError, uploadImage);
+
 router.get('/getuser', authorization, getuser);
-router.post('/verify-otp', verifyOtp);
-router.get('/profile', authorization, getProfile); // New route to get profile
-router.put('/profile', authorization, updateProfile);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/verify-otp', validate(verifyOtpSchema), verifyOtp);
+router.get('/profile', authorization, getProfile);
+router.put('/profile', authorization, validate(updateProfileSchema), updateProfile);
+router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
+router.post('/reset-password', validate(resetPasswordSchema), resetPassword);
+
 module.exports = router;

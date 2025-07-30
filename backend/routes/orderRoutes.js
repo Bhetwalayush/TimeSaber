@@ -4,8 +4,10 @@ const { saveOrder, findAll, findByUserId, deleteById } = require("../controller/
 const { createOrder, verifyPayment } = require("../controller/esewaController");
 const { authorization } = require("../security/auth");
 const { logActivity } = require('../middleware/auditLogger');
+const { validate, placeOrderSchema } = require('../validation/userValidation');
 
-router.post("/", authorization, logActivity('PLACE_ORDER'), saveOrder);
+// Order routes with validation
+router.post("/", authorization, validate(placeOrderSchema), logActivity('PLACE_ORDER'), saveOrder);
 router.get("/", authorization, findAll);
 router.get("/user/:userId", authorization, findByUserId);
 router.delete("/:id", authorization, deleteById);

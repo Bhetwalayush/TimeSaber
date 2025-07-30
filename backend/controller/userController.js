@@ -223,13 +223,41 @@ const logout = async (req, res) => {
 // @access Private
 
 const uploadImage = async (req, res, next) => {
-    if (!req.file) {
-        return res.status(400).send({ message: "Please upload a file" });
+    try {
+        if (!req.file) {
+            return res.status(400).json({ 
+                message: "No file uploaded",
+                error: "Please select an image file to upload",
+                expectedField: "image"
+            });
+        }
+
+        // Log successful upload for debugging
+        console.log('File uploaded successfully:', {
+            originalname: req.file.originalname,
+            filename: req.file.filename,
+            mimetype: req.file.mimetype,
+            size: req.file.size
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "File uploaded successfully",
+            data: req.file.filename,
+            fileInfo: {
+                originalName: req.file.originalname,
+                size: req.file.size,
+                mimetype: req.file.mimetype
+            }
+        });
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({
+            success: false,
+            message: "Error uploading file",
+            error: error.message
+        });
     }
-    res.status(200).json({
-        success: true,
-        data: req.file.filename,
-    });
 };
 
 const getuser = async (req, res) => {
