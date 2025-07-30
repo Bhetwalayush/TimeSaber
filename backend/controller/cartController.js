@@ -54,6 +54,14 @@ const save = async (req, res) => {
 
         await cart.save();
         const populatedCart = await Cart.findById(cart._id).populate("items.itemId");
+        
+        // Add cart details to request for audit logging
+        req.cartDetails = {
+            cartId: cart._id,
+            itemsAdded: items,
+            totalItems: cart.items.length
+        };
+        
         res.status(201).json(populatedCart);
     } catch (e) {
         console.error("Error saving cart:", e);
@@ -104,6 +112,13 @@ const deleteItemFromCart = async (req, res) => {
         if (!cart) {
             return res.status(404).json({ message: "Cart not found" });
         }
+
+        // Add cart details to request for audit logging
+        req.cartDetails = {
+            cartId: cart._id,
+            itemRemoved: itemId,
+            totalItems: cart.items.length
+        };
 
         res.status(200).json({ message: "Item removed from cart", cart });
     } catch (error) {

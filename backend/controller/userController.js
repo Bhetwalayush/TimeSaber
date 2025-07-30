@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(confirm_password, 10);
         const user = new Creadential({ first_name, last_name,phone,address,country,region_state, email, confirm_password: hashedPassword, profile_picture, role });
-        await user.save();
+        
 
         // Setup Nodemailer Transport
         const transporter = nodemailer.createTransport({
@@ -67,7 +67,7 @@ const signUp = async (req, res) => {
         res.status(201).json({ message: "OTP sent to email", email: user.email });
        
         console.log("Email sent:", info.response);
-
+        await user.save();
         // res.status(201).json({ message: "User created successfully", user, emailInfo: info });
 
     } catch (error) {
@@ -102,9 +102,22 @@ const login = async (req, res) => {
             { expiresIn: "10h" }
         );
 
+        // Add user to request object for audit logging
+        req.user = user;
+
         res.json({ message: "Login successful", token, user });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
+    }
+};
+
+const logout = async (req, res) => {
+    try {
+        // The actual logout logic is handled by the frontend (token removal)
+        // This endpoint is mainly for audit logging purposes
+        res.json({ message: "Logout successful" });
+    } catch (error) {
+        res.status(500).json({ message: "Error logging out", error: error.message });
     }
 };
 // @desc Upload Single Image
@@ -275,6 +288,7 @@ const resetPassword = async (req, res) => {
 module.exports = {
     signUp,
     login,
+    logout,
     uploadImage,
     getuser,
     getProfile,

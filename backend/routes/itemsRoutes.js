@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { findAll, save, findById, deleteById, updateById, searchItems } = require("../controller/itemController");
 const { authorization } = require("../security/auth");
+const { logActivity } = require('../middleware/auditLogger');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -16,8 +17,8 @@ const upload = multer({ storage });
 
 router.get("/", findAll);
 router.post("/", authorization, upload.single('image'), save);
-router.get('/search', searchItems);
-router.get("/:id", authorization, findById);
+router.get('/search', authorization, logActivity('SEARCH'), searchItems);
+router.get('/:id', authorization, logActivity('VIEW_ITEM'), findById);
 router.delete("/:id", authorization, deleteById);
 router.put("/:id", authorization, upload.single('image'), updateById);
 
