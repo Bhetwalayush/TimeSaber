@@ -369,7 +369,7 @@ export const WomanCare = () => {
   );
 };
 
-export const Womancare = () => {
+export const Popular = () => {
   const { data, isLoading, isError } = useGetWomanCareProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();
@@ -503,7 +503,7 @@ export const Womancare = () => {
 
   {/* View More on the left */}
   <button className="text-[#007b7b] font-semibold underline hover:text-[#005f5f] transition">
-    <a href="/partybags">View More</a>
+    <a href="/popular">View More</a>
   </button>
 
   {/* Right-side space to center title */}

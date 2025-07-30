@@ -369,7 +369,7 @@ export const FirstAid = () => {
   );
 };
 
-export const Firstaid = () => {
+export const NewArrivals = () => {
   const { data, isLoading, isError } = useGetFirstAidProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();
@@ -498,12 +498,12 @@ export const Firstaid = () => {
   
   {/* Watch for Women centered */}
   <h2 className="text-2xl md:text-3xl font-bold text-black text-center flex-1">
-    New Arrials
+    New Arrivals
   </h2>
 
   {/* View More on the left */}
   <button className="text-[#007b7b] font-semibold underline hover:text-[#005f5f] transition">
-    <a href="/travelbags">View More</a>
+    <a href="/newarrivals">View More</a>
   </button>
 
   {/* Right-side space to center title */}

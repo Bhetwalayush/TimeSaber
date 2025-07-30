@@ -383,7 +383,7 @@ export const BabyCare = () => {
   );
 };
 
-export const Babycare = () => {
+export const WatchforWomen = () => {
   const { data, isLoading, isError } = useGetBabyCareProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();

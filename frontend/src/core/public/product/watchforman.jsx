@@ -369,7 +369,7 @@ export const MenCare = () => {
   );
 };
 
-export const Mencare = () => {
+export const WatchforMan = () => {
   const { data, isLoading, isError } = useGetMenCareProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();

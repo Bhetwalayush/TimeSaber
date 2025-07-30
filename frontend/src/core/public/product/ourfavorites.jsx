@@ -371,7 +371,7 @@ export const Devices = () => {
   );
 };
 
-export const Device = () => {
+export const OurFavorites = () => {
   const { data, isLoading, isError } = useGetDevicesProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();

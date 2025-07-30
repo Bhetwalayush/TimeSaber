@@ -599,7 +599,7 @@ export const haircare = () => {
       </div>
       <center className="mb-4">
         <button className="bg-gray-200 text-black font-semibold px-8 py-2 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-200">
-          <a href="/officebags">View More</a>
+          <a href="/popular">View More</a>
         </button>
       </center>
 
