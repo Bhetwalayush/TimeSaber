@@ -8,28 +8,33 @@ import {
   PieChart,
   Search,
   Timeline,
-  VerifiedUser
+  VerifiedUser,
+  Security,
+  Assessment,
+  Person
 } from "@mui/icons-material"; // Icons
 import { ListOrderedIcon } from "lucide-react";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom"; // For navigation
-const Side = () => {
+const Side = ({ sidebarColor = '#23232b', textColor = '#fff', activeColor = '#6366f1' }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove the token from local storage
-    localStorage.removeItem("name"); // Remove the token from local storage
-    localStorage.removeItem("id"); // Remove the token from local storage
-    localStorage.removeItem("role"); // Remove the token from local storage
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("id");
+    localStorage.removeItem("role");
     console.log("Token removed, logging out...");
-    navigate("/"); // Navigate to the logout route
+    navigate("/");
   };
   return (
     <Sidebar
       rootStyles={{
         height: "100vh",
-        boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)",
-        // position: "fixed",
+        background: sidebarColor,
+        color: textColor,
+        boxShadow: "2px 0 10px rgba(0, 0, 0, 0.2)",
+        borderRight: "1px solid #27272a"
       }}
     >
       {/* Sidebar Header */}
@@ -37,13 +42,14 @@ const Side = () => {
         style={{
           padding: "24px",
           textAlign: "center",
-          borderBottom: "1px solid #e0e0e0",
+          borderBottom: "1px solid #27272a",
+          background: sidebarColor
         }}
       >
-        <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "bold" }}>
-          TimeSaber Admin Panel
+        <h2 style={{ margin: 0, fontSize: "1.7rem", fontWeight: "bold", color: activeColor, letterSpacing: 1 }}>
+          TimeSaber Admin
         </h2>
-        <p style={{ margin: 0, color: "#666", fontSize: "0.9rem" }}>
+        <p style={{ margin: 0, color: "#a3a3a3", fontSize: "0.95rem" }}>
           Welcome, Admin!
         </p>
       </div>
@@ -52,8 +58,20 @@ const Side = () => {
       <Menu
         menuItemStyles={{
           button: {
-            "&:hover": {
-              backgroundColor: "#f5f5f5",
+            color: textColor,
+            background: sidebarColor,
+            borderRadius: "0.5rem",
+            margin: "0.2rem 0",
+            fontWeight: 500,
+            fontSize: "1rem",
+            transition: "background 0.2s, color 0.2s",
+            '&:hover': {
+              backgroundColor: '#232346',
+              color: activeColor,
+            },
+            '&.ps-active': {
+              backgroundColor: activeColor,
+              color: '#fff',
             },
           },
         }}
@@ -67,14 +85,14 @@ const Side = () => {
         </MenuItem>
 
         {/* Charts Submenu */}
-        <SubMenu label="Charts" icon={<BarChart />}>
+        {/* <SubMenu label="Charts" icon={<BarChart />}>
           <MenuItem icon={<PieChart />} component={<Link to="/admin/piechart" />}>
             Pie Chart
           </MenuItem>
           <MenuItem icon={<Timeline />} component={<Link to="/admin/barchart" />}>
             Bar Chart
           </MenuItem>
-        </SubMenu>
+        </SubMenu> */}
 
         {/* add items */}
         <MenuItem icon={<Medication />} component={<Link to="/additems" />}>
@@ -92,11 +110,21 @@ const Side = () => {
           Orders
         </MenuItem>
 
+        {/* Audit Logs Submenu */}
+        <SubMenu label="Audit Logs" icon={<Security />}>
+          <MenuItem icon={<Assessment />} component={<Link to="/auditlogs" />}>
+            All Logs
+          </MenuItem>
+          <MenuItem icon={<BarChart />} component={<Link to="/auditstats" />}>
+            Statistics
+          </MenuItem>
+        </SubMenu>
+
         {/* Divider */}
         <div
           style={{
             margin: "16px 0",
-            borderBottom: "1px solid #e0e0e0",
+            borderBottom: "1px solid #27272a",
           }}
         />
 
@@ -104,11 +132,6 @@ const Side = () => {
         <MenuItem icon={<AccountBoxOutlined />} component={<Link to="/myprofile" />}>
           Profile
         </MenuItem>
-
-        {/* Users */}
-        {/* <MenuItem icon={<People />} component={<Link to="/users" />}>
-          Users
-        </MenuItem> */}
 
         {/* Logout */}
         <MenuItem
@@ -126,13 +149,14 @@ const Side = () => {
         style={{
           padding: "16px",
           textAlign: "center",
-          borderTop: "1px solid #e0e0e0",
+          borderTop: "1px solid #27272a",
           position: "absolute",
           bottom: 0,
           width: "100%",
+          background: sidebarColor
         }}
       >
-        <p style={{ margin: 0, color: "#666", fontSize: "0.8rem" }}>
+        <p style={{ margin: 0, color: "#a3a3a3", fontSize: "0.85rem" }}>
           © 2025 TimeSaber Admin Panel
         </p>
       </div>
