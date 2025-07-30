@@ -5,6 +5,9 @@ import Additems from "./core/private/all items/add_items";
 import Allitems from "./core/private/all items/allitems";
 import Allorder from "./core/private/all order/allorder";
 import Users from "./core/private/all users/allusers";
+import AuditLogs from "./core/private/audit logs/auditlogs";
+import AuditStats from "./core/private/audit logs/auditstats";
+import UserActivity from "./core/private/audit logs/useractivity";
 import Barchart from "./core/private/charts/barchart";
 import Piechart from "./core/private/charts/piechart";
 import Dashboard from "./core/private/dashboard/dashboard";
@@ -114,7 +117,7 @@ function App() {
             ),
         },
         {
-            path: "/officebags",
+            path: "/popular",
             element: (
                 <Suspense fallback={<div>Loading...</div>}>
                     <Officebag />
@@ -154,7 +157,7 @@ function App() {
             ),
         },
         {
-            path: "/travelbags",
+            path: "/newarrivals",
             element: (
                 <Suspense fallback={<div>Loading...</div>}>
                     <Travelbag />
@@ -254,6 +257,30 @@ function App() {
             element: (
                 <Suspense fallback={<div>Loading...</div>}>
                     <Barchart />
+                </Suspense>
+            ),
+        },
+        {
+            path: "/auditlogs",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <AuditLogs />
+                </Suspense>
+            ),
+        },
+        {
+            path: "/auditstats",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <AuditStats />
+                </Suspense>
+            ),
+        },
+        {
+            path: "/useractivity/:userId",
+            element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                    <UserActivity />
                 </Suspense>
             ),
         },
