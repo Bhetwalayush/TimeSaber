@@ -24,7 +24,7 @@ import OurFavorites from "./core/public/product/ourfavorites";
 import WomanCare from "./core/public/product/popular";
 import Officebag from "./core/public/product/this";
 import MenWatch from "./core/public/product/watchforman";
-import BabyCare from "./core/public/product/watchforwomen";
+import WatchforWomen from "./core/public/product/watchforwomen";
 import Wishlist from "./core/public/product/wishlist";
 import Profile from "./core/public/profile/profile";
 import SearchResults from "./core/public/search/searchresult";
@@ -112,7 +112,7 @@ function App() {
             path: "/womenwatch",
             element: (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <BabyCare />
+                    <WatchforWomen />
                 </Suspense>
             ),
         },

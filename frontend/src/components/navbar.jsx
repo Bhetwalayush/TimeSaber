@@ -135,13 +135,13 @@ const Navbar = () => {
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content className="absolute bg-white shadow-lg rounded-md mt-2 w-40 p-1 z-50">
-                {["menwatch", "womenwatch", "ourfavorites", "officebags", "travelbags"].map((cat) => (
+                {["menwatch", "womenwatch", "ourfavorites", "popular", "newarrivals"].map((cat) => (
                   <a
                     key={cat}
                     href={`/${cat}`}
                     className="flex justify-between px-4 py-2 text-sm hover:bg-gray-100"
                   >
-                    {cat.replace("watch", " Watch").replace("women", "Women").replace("men", "Men").replace("ourfavorites","OurFavorites").replace("officebags","Popular").replace("travelbags","NewArrials")}
+                    {cat.replace("watch", " Watch").replace("women", "Women").replace("men", "Men").replace("ourfavorites","OurFavorites").replace("popular","Popular").replace("newarrivals","NewArrials")}
                   </a>
                 ))}
               </DropdownMenu.Content>

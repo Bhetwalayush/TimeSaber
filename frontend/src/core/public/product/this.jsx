@@ -369,7 +369,7 @@ export const Haircare = () => {
   );
 };
 
-export const haircare = () => {
+export const Popular = () => {
   const { data, isLoading, isError } = useGetMenCareProducts();
   const { data: wishlist, isLoading: isWishlistLoading } = useGetWishlist();
   const { mutate: addToCart, isLoading: isAddingToCart } = useCartprod();
@@ -494,11 +494,21 @@ export const haircare = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center">
-        <div className="border-t border-gray-900 w-145"></div>
-        <Typography className="mx-14 text-2xl font-semibold">Popular</Typography>
-        <div className="border-t border-gray-900 w-145"></div>
-      </div>
+            <div className="bg-gradient-to-r from-[#ccffff] to-[#00ffff] p-6 rounded-xl shadow-md flex items-center justify-between mb-6">
+  
+  {/* Watch for Women centered */}
+  <h2 className="text-2xl md:text-3xl font-bold text-black text-center flex-1">
+    Popular
+  </h2>
+
+  {/* View More on the left */}
+  <button className="text-[#007b7b] font-semibold underline hover:text-[#005f5f] transition">
+    <a href="/popular">View More</a>
+  </button>
+
+  {/* Right-side space to center title */}
+  <div className="w-[100px]" />
+</div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-6 py-8">
         {randomProducts.map((product) => (
           <Card
@@ -597,11 +607,11 @@ export const haircare = () => {
           </Card>
         ))}
       </div>
-      <center className="mb-4">
-        <button className="bg-gray-200 text-black font-semibold px-8 py-2 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-200">
+      {/* <center className="mb-4"> */}
+        {/* <button className="bg-gray-200 text-black font-semibold px-8 py-2 rounded-lg shadow-md hover:bg-gray-300 transition-colors duration-200">
           <a href="/popular">View More</a>
-        </button>
-      </center>
+        </button> */}
+      {/* </center> */}
 
       {selectedProduct && (
         <Dialog open={openModal} handler={handleCloseModal} className="max-w-lg">
