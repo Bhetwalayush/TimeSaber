@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Side from '../../../components/sidebar';
 
 const renderUserName = (userName) => {
@@ -15,9 +15,18 @@ const renderUserName = (userName) => {
 };
 
 const renderDetails = (details) => {
-  if (!details) return '';
-  if (typeof details === 'string') return details;
-  return JSON.stringify(details);
+  if (!details || typeof details === 'string') return details || '';
+
+  return (
+    <div className="grid gap-1 text-sm text-orange-100">
+      {Object.entries(details).map(([key, value]) => (
+        <div key={key} className="flex justify-between gap-4">
+          <span className="font-medium capitalize text-orange-300">{key.replace(/_/g, ' ')}</span>
+          <span className="text-right break-all">{String(value)}</span>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default function AuditLogs() {
@@ -63,10 +72,10 @@ export default function AuditLogs() {
                   </thead>
                   <tbody className="bg-[#23232b] divide-y divide-gray-800">
                     {logs.map(log => (
-                      <tr key={log._id} className="hover:bg-[#232346] transition-colors">
+                      <tr key={log._id} className="hover:bg-[#232346] transition-colors align-top">
                         <td className="px-4 py-3 text-white/90">{renderUserName(log.userName)}</td>
                         <td className="px-4 py-3 text-emerald-300 font-semibold">{log.action}</td>
-                        <td className="px-4 py-3 text-orange-200">{renderDetails(log.details)}</td>
+                        <td className="px-4 py-3">{renderDetails(log.details)}</td>
                         <td className="px-4 py-3 text-purple-200">{log.ipAddress}</td>
                         <td className="px-4 py-3 text-gray-300">{new Date(log.timestamp).toLocaleString()}</td>
                       </tr>
@@ -83,4 +92,4 @@ export default function AuditLogs() {
       </main>
     </div>
   );
-} 
+}

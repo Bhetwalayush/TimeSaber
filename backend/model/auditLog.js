@@ -17,7 +17,7 @@ const auditLogSchema = new mongoose.Schema({
     action: {
         type: String,
         required: true,
-        enum: ['LOGIN', 'LOGOUT', 'ADD_TO_CART', 'REMOVE_FROM_CART', 'UPDATE_CART', 'PLACE_ORDER', 'VIEW_ITEM', 'SEARCH']
+        enum: ['LOGIN', 'LOGOUT', 'LOGIN_FAILED', 'ACCOUNT_LOCKED', 'ADD_TO_CART', 'REMOVE_FROM_CART', 'UPDATE_CART', 'PLACE_ORDER', 'VIEW_ITEM', 'SEARCH']
     },
     details: {
         type: mongoose.Schema.Types.Mixed,
