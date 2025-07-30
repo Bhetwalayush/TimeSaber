@@ -10,7 +10,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tool
 const Dashboard = () => {
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -23,7 +22,6 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
-
   const [stats, setStats] = useState({
     users: 0,
     products: 0,
@@ -31,11 +29,9 @@ const Dashboard = () => {
     orders: 0
   });
 
-  // Fetch dashboard stats (replace with your actual API call)
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // This is a mock API call - replace with your actual endpoint
         const response = await fetch('https://localhost:3000/api/admin/stats');
         const data = await response.json();
         setStats({
@@ -51,40 +47,38 @@ const Dashboard = () => {
     fetchStats();
   }, []);
 
-  // Bar chart data
   const barData = {
     labels: ['Users', 'Products', 'Carts', 'Orders'],
     datasets: [{
       label: 'Count',
       data: [stats.users, stats.products, stats.carts, stats.orders],
       backgroundColor: [
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(153, 102, 255, 0.6)'
+        '#6366f1', // indigo
+        '#10b981', // emerald
+        '#f59e42', // orange
+        '#a78bfa'  // purple
       ],
       borderColor: [
-        'rgba(54, 162, 235, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(153, 102, 255, 1)'
+        '#6366f1',
+        '#10b981',
+        '#f59e42',
+        '#a78bfa'
       ],
-      borderWidth: 1
+      borderWidth: 2
     }]
   };
 
-  // Pie chart data
   const pieData = {
     labels: ['Users', 'Products', 'Carts', 'Orders'],
     datasets: [{
       data: [stats.users, stats.products, stats.carts, stats.orders],
       backgroundColor: [
-        'rgba(54, 162, 235, 0.8)',
-        'rgba(75, 192, 192, 0.8)',
-        'rgba(255, 206, 86, 0.8)',
-        'rgba(153, 102, 255, 0.8)'
+        '#6366f1',
+        '#10b981',
+        '#f59e42',
+        '#a78bfa'
       ],
-      borderColor: '#fff',
+      borderColor: '#18181b',
       borderWidth: 2
     }],
   };
@@ -94,48 +88,55 @@ const Dashboard = () => {
     plugins: {
       legend: {
         position: 'top',
+        labels: { color: '#fff' }
       },
       title: {
         display: true,
-        text: 'Admin Dashboard Statistics'
+        text: 'Admin Dashboard Statistics',
+        color: '#fff',
+        font: { size: 18 }
       }
-    }, radius: '59%'
+    },
+    scales: {
+      x: { ticks: { color: '#fff' }, grid: { color: '#27272a' } },
+      y: { ticks: { color: '#fff' }, grid: { color: '#27272a' } }
+    },
+    radius: '59%'
   };
 
   return (
-    <div className='flex overflow-hidden h-screen'>
-      <Side />
-      <div className="flex-1 p-6 bg-gray-100">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
+    <div className="flex overflow-hidden h-screen bg-[#18181b]">
+      <Side sidebarColor="#23232b" textColor="#fff" activeColor="#6366f1" />
+      <div className="flex-1 p-8 bg-[#18181b] min-h-screen">
+        <h1 className="text-4xl font-extrabold mb-8 text-white tracking-tight">Admin Dashboard</h1>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-blue-600">Total Users</h3>
-            <p className="text-2xl font-bold">{stats.users}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 rounded-2xl shadow-lg flex flex-col items-start">
+            <h3 className="text-lg font-semibold text-white/80">Total Users</h3>
+            <p className="text-3xl font-extrabold text-white mt-2">{stats.users}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-green-600">Products</h3>
-            <p className="text-2xl font-bold">{stats.products}</p>
+          <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 rounded-2xl shadow-lg flex flex-col items-start">
+            <h3 className="text-lg font-semibold text-white/80">Products</h3>
+            <p className="text-3xl font-extrabold text-white mt-2">{stats.products}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-yellow-600">Carts</h3>
-            <p className="text-2xl font-bold">{stats.carts}</p>
+          <div className="bg-gradient-to-br from-orange-500 to-orange-700 p-6 rounded-2xl shadow-lg flex flex-col items-start">
+            <h3 className="text-lg font-semibold text-white/80">Carts</h3>
+            <p className="text-3xl font-extrabold text-white mt-2">{stats.carts}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-purple-600">Orders</h3>
-            <p className="text-2xl font-bold">{stats.orders}</p>
+          <div className="bg-gradient-to-br from-purple-600 to-purple-800 p-6 rounded-2xl shadow-lg flex flex-col items-start">
+            <h3 className="text-lg font-semibold text-white/80">Orders</h3>
+            <p className="text-3xl font-extrabold text-white mt-2">{stats.orders}</p>
           </div>
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="bg-white p-4  rounded-lg shadow-md">
-            <Bar data={barData} options={{ ...chartOptions, title: { ...chartOptions.title, text: 'Overview Bar Chart' } }} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-[#23232b] p-6 rounded-2xl shadow-lg">
+            <Bar data={barData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { ...chartOptions.plugins.title, text: 'Overview Bar Chart' } } }} />
           </div>
-          <div className="bg-white p-4 h-full
-           rounded-lg shadow-md">
-            <Pie data={pieData} options={{ ...chartOptions, title: { ...chartOptions.title, text: 'Distribution Pie Chart', } }} />
+          <div className="bg-[#23232b] p-6 rounded-2xl shadow-lg">
+            <Pie data={pieData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { ...chartOptions.plugins.title, text: 'Distribution Pie Chart' } } }} />
           </div>
         </div>
       </div>

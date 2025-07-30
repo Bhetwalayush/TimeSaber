@@ -40,7 +40,6 @@ function Allorder() {
             setItems(response.data || []);
         } catch (error) {
             console.error('Error fetching orders:', error.response?.data || error.message);
-        
             setItems([]);
         }
     };
@@ -68,123 +67,125 @@ function Allorder() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
-            <div className="fixed h-full">
-                <Side />
-            </div>
+        <div className="flex min-h-screen bg-[#18181b]">
+            <Side sidebarColor="#23232b" textColor="#fff" activeColor="#6366f1" />
 
-            <div className="flex-1 ml-64 p-8">
-                <h2 className="text-4xl font-bold text-gray-800 text-center mb-10">ALL ORDERS</h2>
+            <div className="flex-1 p-8">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-white text-center mb-10 tracking-tight">ALL ORDERS</h2>
 
-                <div className="w-full bg-white rounded-lg shadow-lg p-6">
-                    {items.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-gray-200 text-gray-700">
-                                        <th className="p-4 font-semibold text-sm uppercase">Order ID</th>
-                                        <th className="p-4 font-semibold text-sm uppercase">User</th>
-                                        <th className="p-4 font-semibold text-sm uppercase">Items</th>
-                                        <th className="p-4 font-semibold text-sm uppercase">Address</th>
-                                        <th className="p-4 font-semibold text-sm uppercase">Phone No</th>
-                                        <th className="p-4 font-semibold text-sm uppercase">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {items.map((item) => (
-                                        <tr
-                                            key={item._id}
-                                            className="border-b hover:bg-gray-50 transition-colors"
-                                        >
-                                            <td className="p-4 text-gray-600 break-all">{item._id}</td>
-                                            <td className="p-4 text-gray-600 break-all">{item.userId || "N/A"}</td>
-                                            <td
-                                                className="p-4 text-blue-600 break-all cursor-pointer hover:underline"
-                                                onClick={() => showOrderDetails(item)}
-                                            >
-                                                View Items
-                                            </td>
-                                            <td className="p-4 text-gray-600">{item.address || "N/A"}</td>
-                                            <td className="p-4 text-gray-600">{item.phone_no || "N/A"}</td>
-                                            <td className="p-4">
-                                                <button
-                                                    className="p-2 text-red-500 hover:text-red-700 transition-colors"
-                                                    onClick={() => handleDelete(item._id)}
-                                                    title="Delete Order"
-                                                >
-                                                    <Trash2 size={20} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <div className="text-center py-10 text-gray-500">
-                            No orders found
-                        </div>
-                    )}
-                </div>
-
-                {showModal && selectedOrder && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-2xl font-semibold text-gray-800">
-                                    Order Items (ID: {selectedOrder._id})
-                                </h3>
-                                <button
-                                    className="text-gray-500 hover:text-gray-700 text-2xl"
-                                    onClick={() => setShowModal(false)}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                            {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                    <div className="bg-[#23232b] rounded-2xl shadow-xl p-6 border border-gray-800">
+                        {items.length > 0 ? (
+                            <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead>
-                                        <tr className="bg-gray-100 text-gray-700">
-                                            <th className="p-3 font-semibold text-sm">Item Name</th>
-                                            <th className="p-3 font-semibold text-sm">Quantity</th>
-                                            <th className="p-3 font-semibold text-sm">Price</th>
+                                        <tr className="bg-[#18181b]">
+                                            <th className="p-4 font-semibold text-sm uppercase text-indigo-400 tracking-wider border-b border-gray-700">Order ID</th>
+                                            <th className="p-4 font-semibold text-sm uppercase text-emerald-400 tracking-wider border-b border-gray-700">User</th>
+                                            <th className="p-4 font-semibold text-sm uppercase text-orange-400 tracking-wider border-b border-gray-700">Items</th>
+                                            <th className="p-4 font-semibold text-sm uppercase text-purple-400 tracking-wider border-b border-gray-700">Address</th>
+                                            <th className="p-4 font-semibold text-sm uppercase text-gray-300 tracking-wider border-b border-gray-700">Phone No</th>
+                                            <th className="p-4 font-semibold text-sm uppercase text-red-400 tracking-wider border-b border-gray-700">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {selectedOrder.items.map((item) => (
-                                            <tr key={item._id || item.itemId} className="border-b">
-                                                <td className="p-3 text-gray-600">
-                                                    {item.item_name || "N/A"}
+                                    <tbody className="divide-y divide-gray-800">
+                                        {items.map((item) => (
+                                            <tr
+                                                key={item._id}
+                                                className="hover:bg-[#232346] transition-colors"
+                                            >
+                                                <td className="p-4 text-white/90 font-mono text-sm break-all">{item._id}</td>
+                                                <td className="p-4 text-emerald-300 break-all">{item.userId || "N/A"}</td>
+                                                <td
+                                                    className="p-4 text-orange-300 break-all cursor-pointer hover:text-orange-200 transition-colors"
+                                                    onClick={() => showOrderDetails(item)}
+                                                >
+                                                    View Items
                                                 </td>
-                                                <td className="p-3 text-gray-600">
-                                                    {item.quantity || 0}
-                                                </td>
-                                                <td className="p-3 text-gray-600">
-                                                    Rs.{item.item_price || "N/A"}
+                                                <td className="p-4 text-purple-200">{item.address || "N/A"}</td>
+                                                <td className="p-4 text-gray-300">{item.phone_no || "N/A"}</td>
+                                                <td className="p-4">
+                                                    <button
+                                                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors"
+                                                        onClick={() => handleDelete(item._id)}
+                                                        title="Delete Order"
+                                                    >
+                                                        <Trash2 size={20} />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                            ) : (
-                                <p className="text-center text-gray-500 py-4">No items in this order</p>
-                            )}
-                        </div>
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 text-gray-400">
+                                No orders found
+                            </div>
+                        )}
                     </div>
-                )}
 
-                <ToastContainer
-                    position="top-right"
-                    autoClose={2500}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                />
+                    {showModal && selectedOrder && (
+                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                            <div className="bg-[#23232b] rounded-2xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto border border-gray-800 shadow-2xl">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-2xl font-bold text-white">
+                                        Order Items (ID: {selectedOrder._id})
+                                    </h3>
+                                    <button
+                                        className="text-gray-400 hover:text-white text-2xl p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                                {selectedOrder.items && selectedOrder.items.length > 0 ? (
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left">
+                                            <thead>
+                                                <tr className="bg-[#18181b]">
+                                                    <th className="p-4 font-semibold text-sm text-indigo-400 border-b border-gray-700">Item Name</th>
+                                                    <th className="p-4 font-semibold text-sm text-emerald-400 border-b border-gray-700">Quantity</th>
+                                                    <th className="p-4 font-semibold text-sm text-orange-400 border-b border-gray-700">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-800">
+                                                {selectedOrder.items.map((item) => (
+                                                    <tr key={item._id || item.itemId} className="hover:bg-[#232346] transition-colors">
+                                                        <td className="p-4 text-white/90">
+                                                            {item.item_name || "N/A"}
+                                                        </td>
+                                                        <td className="p-4 text-emerald-300">
+                                                            {item.quantity || 0}
+                                                        </td>
+                                                        <td className="p-4 text-orange-300">
+                                                            Rs.{item.item_price || "N/A"}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <p className="text-center text-gray-400 py-8">No items in this order</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={2500}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
+                    />
+                </div>
             </div>
         </div>
     );

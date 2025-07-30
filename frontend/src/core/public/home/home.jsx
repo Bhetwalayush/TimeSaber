@@ -11,12 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 import Corousal from "../../../components/corousal";
 import Footer from "../../../components/footer";
 import Navbar from "../../../components/navbar";
-import { Firstaid } from "../product/newarrivals";
-import { Device } from "../product/ourfavorites";
-import { Womancare } from "../product/popular";
+import { NewArrivals } from "../product/newarrivals";
+import { OurFavorites } from "../product/ourfavorites";
+import { Popular } from "../product/popular";
 import { useCartprod } from "../product/productquery"; // Adjust path as needed
-import { Mencare } from "../product/watchforman";
-import { Babycare } from "../product/watchforwomen";
+import { WatchforMan } from "../product/watchforman";
+import { WatchforWomen } from "../product/watchforwomen";
 
 const Home = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -196,16 +196,18 @@ const Home = () => {
                 {!searchQuery && (
                     <>
                         <Corousal />
-                        <Babycare />
-                        <Womancare />
                         <div>
-                            <Mencare />
+                            <NewArrivals />                        </div>
+                        <Popular />
+                        <WatchforWomen />
+                        
+                        <div>
+                            <WatchforMan />
                         </div>
 
+                        
                         <div>
-                            <Firstaid />                        </div>
-                        <div>
-                            <Device />
+                            <OurFavorites />
                         </div>
                     </>
                 )}

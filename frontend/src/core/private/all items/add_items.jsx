@@ -94,83 +94,81 @@ function Additems() {
     };
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
-            <div className="flex-shrink-0">
-                <Side />
-            </div>
+        <div className="flex min-h-screen bg-[#18181b]">
+            <Side sidebarColor="#23232b" textColor="#fff" activeColor="#6366f1" />
             
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-8">
                 <div className="max-w-4xl mx-auto">
-                    {/* Header - Reduced spacing */}
-                    <div className="text-center mb-4">
-                        <div className="flex items-center justify-center mb-2">
-                            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
-                                <ShoppingBag className="w-6 h-6 text-white" />
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <div className="flex items-center justify-center mb-4">
+                            <div className="p-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full shadow-lg">
+                                <ShoppingBag className="w-8 h-8 text-white" />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-1">Add New Product</h1>
-                        <p className="text-sm text-gray-600">Create a new watch listing for TimeSaber</p>
+                        <h1 className="text-3xl font-extrabold text-white mb-2 tracking-tight">Add New Product</h1>
+                        <p className="text-gray-400">Create a new watch listing for TimeSaber</p>
                     </div>
 
-                    {/* Form Card - Reduced padding */}
-                    <div className="bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {/* Form Card */}
+                    <div className="bg-[#23232b] rounded-2xl shadow-xl p-8 border border-gray-800">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                             {/* Product Information Section */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Package className="w-4 h-4 text-blue-500" />
-                                    <h3 className="text-lg font-semibold text-gray-800">Product Information</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Package className="w-5 h-5 text-indigo-400" />
+                                    <h3 className="text-xl font-semibold text-white">Product Information</h3>
                                 </div>
                                 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     <div className="lg:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Product Name</label>
                                         <input
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-500"
                                             type="text"
                                             placeholder="e.g., Luxury Leather Handbag"
                                             {...register("item_name", { required: "Product name is required" })}
                                         />
-                                        {errors.item_name && <p className="text-red-500 text-xs mt-1">{errors.item_name.message}</p>}
+                                        {errors.item_name && <p className="text-red-400 text-sm mt-2">{errors.item_name.message}</p>}
                                     </div>
                                     
                                     <div className="lg:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
                                         <textarea
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm resize-none text-sm"
-                                            rows="3"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 resize-none text-white placeholder-gray-500"
+                                            rows="4"
                                             placeholder="Describe your product's features, materials, and unique selling points..."
                                             {...register("description", { required: "Description is required" })}
                                         />
-                                        {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
+                                        {errors.description && <p className="text-red-400 text-sm mt-2">{errors.description.message}</p>}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Image Upload Section */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <ImageIcon className="w-4 h-4 text-blue-500" />
-                                    <h3 className="text-lg font-semibold text-gray-800">Product Image</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <ImageIcon className="w-5 h-5 text-indigo-400" />
+                                    <h3 className="text-xl font-semibold text-white">Product Image</h3>
                                 </div>
                                 
-                                <div className="flex flex-col lg:flex-row gap-4">
+                                <div className="flex flex-col lg:flex-row gap-6">
                                     <div className="flex-1">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Upload Image</label>
                                         <input
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
                                             type="file"
                                             accept="image/*"
                                             {...register("image", { required: "Product image is required" })}
                                             onChange={handleImageChange}
                                         />
-                                        {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image.message}</p>}
+                                        {errors.image && <p className="text-red-400 text-sm mt-2">{errors.image.message}</p>}
                                     </div>
                                     
                                     {imagePreview && (
                                         <div className="flex-shrink-0">
-                                            <p className="text-sm font-medium text-gray-700 mb-1">Preview</p>
-                                            <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-300 shadow-sm">
+                                            <p className="text-sm font-medium text-gray-300 mb-2">Preview</p>
+                                            <div className="w-24 h-24 rounded-xl overflow-hidden border border-gray-700 shadow-lg">
                                                 <img 
                                                     src={imagePreview} 
                                                     alt="Preview" 
@@ -183,68 +181,68 @@ function Additems() {
                             </div>
 
                             {/* Pricing & Inventory Section */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <DollarSign className="w-4 h-4 text-blue-500" />
-                                    <h3 className="text-lg font-semibold text-gray-800">Pricing & Inventory</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <DollarSign className="w-5 h-5 text-indigo-400" />
+                                    <h3 className="text-xl font-semibold text-white">Pricing & Inventory</h3>
                                 </div>
                                 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Quantity</label>
                                         <input
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-500"
                                             type="number"
                                             min="1"
                                             placeholder="Available quantity"
                                             {...register("item_quantity", { required: "Quantity is required", min: 1 })}
                                         />
-                                        {errors.item_quantity && <p className="text-red-500 text-xs mt-1">{errors.item_quantity.message}</p>}
+                                        {errors.item_quantity && <p className="text-red-400 text-sm mt-2">{errors.item_quantity.message}</p>}
                                     </div>
                                     
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Price ($)</label>
                                         <input
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-500"
                                             type="number"
                                             min="0"
                                             step="0.01"
                                             placeholder="Price per item"
                                             {...register("item_price", { required: "Price is required", min: 0 })}
                                         />
-                                        {errors.item_price && <p className="text-red-500 text-xs mt-1">{errors.item_price.message}</p>}
+                                        {errors.item_price && <p className="text-red-400 text-sm mt-2">{errors.item_price.message}</p>}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Category Selection */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Plus className="w-4 h-4 text-blue-500" />
-                                    <h3 className="text-lg font-semibold text-gray-800">Category</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Plus className="w-5 h-5 text-indigo-400" />
+                                    <h3 className="text-xl font-semibold text-white">Category</h3>
                                 </div>
                                 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Brand</label>
                                         <select
                                             {...register("item_type", { required: "Brand is required" })}
                                             onChange={handleCategoryChange}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white"
                                         >
                                             <option value="">Select Brand</option>
                                             {Object.keys(subOptions).map((category) => (
                                                 <option key={category} value={category}>{category}</option>
                                             ))}
                                         </select>
-                                        {errors.item_type && <p className="text-red-500 text-xs mt-1">{errors.item_type.message}</p>}
+                                        {errors.item_type && <p className="text-red-400 text-sm mt-2">{errors.item_type.message}</p>}
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Product Type</label>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Product Type</label>
                                         <select
                                             {...register("sub_item_type", { required: "Product type is required" })}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm text-sm"
+                                            className="w-full p-4 bg-[#18181b] border border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-white"
                                             enabled={!selectedCategory}
                                         >
                                             <option value="">Select Product Type</option>
@@ -252,22 +250,22 @@ function Additems() {
                                                 <option key={sub} value={sub}>{sub}</option>
                                             ))}
                                         </select>
-                                        {errors.sub_item_type && <p className="text-red-500 text-xs mt-1">{errors.sub_item_type.message}</p>}
+                                        {errors.sub_item_type && <p className="text-red-400 text-sm mt-2">{errors.sub_item_type.message}</p>}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex items-center justify-center gap-4 pt-4">
+                            <div className="flex items-center justify-center gap-6 pt-8">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm"
+                                    className="flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                 >
                                     {isLoading ? (
-                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                     ) : (
-                                        <Upload className="w-4 h-4" />
+                                        <Upload className="w-5 h-5" />
                                     )}
                                     {isLoading ? "Adding..." : "Add Product"}
                                 </button>
@@ -278,9 +276,9 @@ function Additems() {
                                         setSelectedCategory("");
                                         setImagePreview(null);
                                     }}
-                                    className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 text-white font-medium hover:from-red-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm"
+                                    className="flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold hover:from-red-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                                 >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-5 h-5" />
                                     Reset
                                 </button>
                             </div>
@@ -299,7 +297,7 @@ function Additems() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="light"
+                theme="dark"
             />
         </div>
     );
