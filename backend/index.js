@@ -6,6 +6,7 @@ const CartRouter= require("./routes/cartRoutes")
 const orderRoutes = require("./routes/orderRoutes");
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const wishlistRoutes = require('./routes/wishlist');
+const auditRoutes = require('./routes/auditRoutes');
 const fs= require("fs")
 const app = express();
 const path = require('path');
@@ -29,6 +30,7 @@ app.use("/api/items", ItemRouter)
 app.use("/api/cart",CartRouter)
 app.use("/api/order", orderRoutes);
 app.use('/api/admin', dashboardRoutes);
+app.use('/api/admin/audit', auditRoutes);
 app.use('/profile', express.static('profile'));
 app.use('/uploads', express.static('uploads'));
 
