@@ -8,10 +8,29 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const wishlistRoutes = require('./routes/wishlist');
 const auditRoutes = require('./routes/auditRoutes');
 const fs= require("fs")
+const cookieParser = require('cookie-parser');
+// const csrf = require('csurf');
+// const csrfProtection = csrf({ cookie: true });
 const app = express();
+
+// CORS setup (must be before any routes or middleware)
+const cors = require('cors');
+const corsOptions = {
+    origin: ['https://localhost:5000'],
+    credentials: true
+};
+app.use(cors(corsOptions));
+
+// Enable cookie parsing for all routes
+app.use(cookieParser());
 const path = require('path');
 const https=require("https");
 
+//Apply CSRF protection
+// app.use('/api', csrfProtection);
+// app.get('/api/csrf-token', (req, res) => {
+//   res.json({ csrfToken: req.csrfToken() });
+// });
 // Security middleware imports
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -63,6 +82,7 @@ app.use(sqlInjectionProtection);
 
 // 5. NoSQL Injection Protection
 app.use(noSqlInjectionProtection);
+app.use(fileUploadSecurity);
 
 // 6. Request Size Limiting
 app.use(requestSizeLimit);
@@ -74,9 +94,11 @@ app.use(securityHeaders);
 app.use(securityLogging);
 
 // 9. Rate limiting
+
+// Increase rate limit for development
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    max: 1000, // allow 1000 requests per 15 minutes per IP
     message: 'Too many requests from this IP, please try again later.',
     standardHeaders: true,
     legacyHeaders: false,
@@ -114,14 +136,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const cors = require('cors'); // Import the cors package
-const corsOptions = {
-    users: true,
-    origin: ['https://localhost:5000','https://192.168.1.2:5000/'], // Whitelist the domains you want to allow
-    credentials: true,
-    optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+
 
 // Routes
 app.use("/api/users", UserRouter);
