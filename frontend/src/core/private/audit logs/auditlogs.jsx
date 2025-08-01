@@ -38,9 +38,13 @@ export default function AuditLogs() {
     setLoading(true);
     setError(null);
     fetch('https://localhost:3000/api/admin/audit/logs', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      credentials: 'include',
     })
       .then(res => {
+        if (res.status === 401 || res.status === 403) {
+          setError('Access denied: Admins only');
+          return { logs: [] };
+        }
         if (!res.ok) throw new Error('Failed to fetch logs');
         return res.json();
       })

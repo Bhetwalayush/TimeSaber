@@ -1,31 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { 
-  BarChart, 
-  Bar, 
-  PieChart, 
-  Pie, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  Cell
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
 } from 'recharts';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  People, 
-  ShoppingCart,
-  Login,
-  Logout,
-  Download,
-  Refresh
-} from '@mui/icons-material';
 import Side from '../../../components/sidebar';
 const AuditStats = () => {
   const navigate = useNavigate();
@@ -45,17 +29,7 @@ const AuditStats = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token) {
-      toast.error("Please LOGIN");
-      navigate('/login', { replace: true });
-    } else if (role === "user") {
-      toast.error("Access denied: Admins only");
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
+  // No localStorage/token/role check. Auth handled by backend via cookie.
 
   useEffect(() => {
     fetchAuditStats();
@@ -64,19 +38,21 @@ const AuditStats = () => {
   const fetchAuditStats = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-
       const response = await fetch(`https://localhost:3000/api/admin/audit/stats?timeRange=${timeRange}`, {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-
+      if (response.status === 401 || response.status === 403) {
+        toast.error('Access denied: Admins only');
+        navigate('/login', { replace: true });
+        setLoading(false);
+        return;
+      }
       if (!response.ok) {
         throw new Error('Failed to fetch audit statistics');
       }
-
       const data = await response.json();
       setStats(data);
     } catch (error) {
@@ -89,18 +65,16 @@ const AuditStats = () => {
 
   const handleExport = async () => {
     try {
-      const token = localStorage.getItem("token");
-
       const response = await fetch(`https://localhost:3000/api/admin/audit/stats/export?timeRange=${timeRange}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include',
       });
-
+      if (response.status === 401 || response.status === 403) {
+        toast.error('Access denied: Admins only');
+        return;
+      }
       if (!response.ok) {
         throw new Error('Failed to export audit statistics');
       }
-
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -110,7 +84,6 @@ const AuditStats = () => {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-
       toast.success('Audit statistics exported successfully');
     } catch (error) {
       console.error('Error exporting audit statistics:', error);

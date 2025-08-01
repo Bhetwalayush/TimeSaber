@@ -11,8 +11,9 @@ exports.getAuditLogs = async (req, res) => {
         // Build filter object
         const filter = {};
         
-        if (req.query.userId) {
-            filter.userId = req.query.userId;
+        const userId = req.cookies.userId;
+        if (userId) {
+            filter.userId = userId;
         }
         
         if (req.query.action) {
@@ -120,7 +121,7 @@ exports.getAuditStats = async (req, res) => {
 // Get user-specific audit logs
 exports.getUserAuditLogs = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.cookies.userId;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
         const skip = (page - 1) * limit;
