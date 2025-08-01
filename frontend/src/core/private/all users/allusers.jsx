@@ -1,5 +1,4 @@
 import { Clipboard } from 'lucide-react';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,13 +8,7 @@ import { useGetUser } from './user_query';
 function Users() {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!localStorage.getItem("token")) {
-            navigate('/login', { replace: true });
-        } else if (localStorage.getItem("role") === "user") {
-            navigate('/', { replace: true });
-        }
-    }, [navigate]);
+    // No localStorage/token/role check. Auth handled by backend via cookie.
 
     const { data: userList } = useGetUser();
 

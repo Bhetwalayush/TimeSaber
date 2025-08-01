@@ -1,17 +1,14 @@
 import {
   AccountBoxOutlined,
+  Assessment,
   BarChart,
   Dashboard,
   ExitToApp,
   Home,
   Medication,
-  PieChart,
   Search,
-  Timeline,
-  VerifiedUser,
   Security,
-  Assessment,
-  Person
+  VerifiedUser
 } from "@mui/icons-material"; // Icons
 import { ListOrderedIcon } from "lucide-react";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
@@ -20,11 +17,7 @@ const Side = ({ sidebarColor = '#23232b', textColor = '#fff', activeColor = '#63
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("name");
-    localStorage.removeItem("id");
-    localStorage.removeItem("role");
-    console.log("Token removed, logging out...");
+    // Optionally, call a backend logout endpoint if needed
     navigate("/");
   };
   return (

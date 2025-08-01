@@ -7,10 +7,8 @@ export const useGetUser = () => {
         queryKey: ["GET_USER_LIST"],
         queryFn: () => {
             return axios.get("https://localhost:3000/api/users/getuser", {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-            },)
+                withCredentials: true,
+            })
         }
     })
 }

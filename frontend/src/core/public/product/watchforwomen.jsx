@@ -65,11 +65,6 @@ export const BabyCare = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -85,15 +80,10 @@ export const BabyCare = () => {
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -101,7 +91,7 @@ export const BabyCare = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -122,11 +112,6 @@ export const BabyCare = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -421,16 +406,10 @@ export const WatchforWomen = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
         onSuccess: () => {
-          console.log("Item added to cart successfully");
           toast.success("Successfully added item to your cart");
         },
         onError: (error) => {
@@ -442,15 +421,10 @@ export const WatchforWomen = () => {
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -458,7 +432,7 @@ export const WatchforWomen = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -479,16 +453,10 @@ export const WatchforWomen = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
         onSuccess: () => {
-          console.log("Item added to cart successfully");
           toast.success("Successfully added item to your cart");
           navigate(`/mycart`);
         },

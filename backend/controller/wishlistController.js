@@ -4,10 +4,12 @@ const Item = require('../model/items');
 // Add item to wishlist
 exports.addToWishlist = async (req, res) => {
   try {
-    const { productId, userId } = req.body;
+    const { productId } = req.body;
+    // Get userId from cookie
+    const userId = req.cookies.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: 'User ID is required' });
+      return res.status(401).json({ message: 'User ID is required in cookie' });
     }
 
     // Check if item already exists in wishlist
@@ -31,10 +33,11 @@ exports.addToWishlist = async (req, res) => {
 exports.removeFromWishlist = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { userId } = req.body;
+    // Get userId from cookie
+    const userId = req.cookies.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: 'User ID is required' });
+      return res.status(401).json({ message: 'User ID is required in cookie' });
     }
 
     const wishlistItem = await Wishlist.findOneAndDelete({ userId, productId });
@@ -77,10 +80,11 @@ exports.removeFromWishlist = async (req, res) => {
 
 exports.getWishlist = async (req, res) => {
   try {
-    const { userId } = req.query;
+    // Get userId from cookie
+    const userId = req.cookies.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: 'User ID is required' });
+      return res.status(401).json({ message: 'User ID is required in cookie' });
     }
 
     const wishlist = await Wishlist.find({ userId }).populate('productId');

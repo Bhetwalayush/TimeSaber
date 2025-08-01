@@ -198,14 +198,6 @@ const SearchResults = () => {
   const handleAddToCart = async (itemId) => {
     setIsAdding(true);
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('id');
-      
-      if (!token || !userId) {
-        toast.error("Please login to add items to cart");
-        return;
-      }
-
       addToCart(
         { itemId, quantity: quantities[itemId] || 1 },
         {
@@ -227,15 +219,10 @@ const SearchResults = () => {
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -243,7 +230,7 @@ const SearchResults = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),

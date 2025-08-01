@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { AddShoppingCartOutlined, ShoppingBagOutlined } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -34,12 +34,6 @@ const Wishlist = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      toast.error("Please LOGIN");
-      navigate("/login", { replace: true });
-    }
-  }, [navigate]);
 
   const handleIncrease = (itemId) => {
     const item = wishlist?.find((item) => item.productId === itemId)?.product;
@@ -71,11 +65,6 @@ const Wishlist = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     if (quantity < 1) {
       toast.error("Quantity must be at least 1");
       return;
@@ -96,11 +85,6 @@ const Wishlist = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     if (quantity < 1) {
       toast.error("Quantity must be at least 1");
       return;
@@ -121,13 +105,8 @@ const Wishlist = () => {
   };
 
   const handleRemoveFromWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     removeFromWishlist(
-      { productId, userId },
+      { productId },
       {
         onSuccess: () => toast.success("Removed from wishlist"),
         onError: () => toast.error("Failed to remove from wishlist"),

@@ -28,13 +28,7 @@ function Allitems() {
   const itemsPerPage = 5;
 
   // Authentication check
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate('/login', { replace: true });
-    } else if (localStorage.getItem("role") === "user") {
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
+    // No localStorage/token/role check. Auth handled by backend via cookie.
 
   // Search logic
   useEffect(() => {

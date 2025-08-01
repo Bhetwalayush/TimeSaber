@@ -12,18 +12,7 @@ function Allorder() {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    // Check authentication and role
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
-        if (!token) {
-            toast.error("Please LOGIN");
-            navigate('/login', { replace: true });
-        } else if (role === "user") {
-            toast.error("Access denied: Admins only");
-            navigate('/', { replace: true });
-        }
-    }, [navigate]);
+    // No localStorage/token/role check. Auth handled by backend via cookie.
 
     // Fetch all orders
     useEffect(() => {
@@ -33,14 +22,17 @@ function Allorder() {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://localhost:3000/api/order', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                withCredentials: true,
             });
             setItems(response.data || []);
         } catch (error) {
-            console.error('Error fetching orders:', error.response?.data || error.message);
-            setItems([]);
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                toast.error("Access denied: Admins only");
+                navigate('/login', { replace: true });
+            } else {
+                console.error('Error fetching orders:', error.response?.data || error.message);
+                setItems([]);
+            }
         }
     };
 
@@ -48,15 +40,18 @@ function Allorder() {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`https://localhost:3000/api/order/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                withCredentials: true,
             });
             setItems(items.filter((item) => item._id !== id));
             toast.success('Order deleted successfully');
         } catch (error) {
-            console.error('Error deleting order:', error.response?.data || error.message);
-            toast.error(error.response?.data?.message || 'Failed to delete order');
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                toast.error("Access denied: Admins only");
+                navigate('/login', { replace: true });
+            } else {
+                console.error('Error deleting order:', error.response?.data || error.message);
+                toast.error(error.response?.data?.message || 'Failed to delete order');
+            }
         }
     };
 

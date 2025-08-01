@@ -54,18 +54,25 @@ export const useCartprod = () => {
     return useMutation({
         mutationKey: ["ADD_TO_CART"],
         mutationFn: async ({ itemId, quantity }) => {
-            const userId = localStorage.getItem("id");
-            if (!userId) {
-                throw new Error("User not logged in");
+            // Validation and logging
+            if (!itemId || typeof quantity !== 'number' || quantity < 1) {
+                console.error("Invalid cart payload:", { itemId, quantity });
+                throw new Error("Invalid item or quantity for cart");
             }
-            return axios.post(
-                "https://localhost:3000/api/cart",
-                {
-                    userId,
-                    items: [{ itemId, quantity }],
-                },
-                { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-            );
+            const payload = { items: [{ itemId, quantity }] };
+            console.log("Cart payload:", payload);
+            try {
+                return await axios.post(
+                    "https://localhost:3000/api/cart",
+                    payload,
+                    { withCredentials: true }
+                );
+            } catch (err) {
+                if (err.response) {
+                    console.error("Backend error:", err.response.data);
+                }
+                throw err;
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['cart']);
@@ -77,11 +84,11 @@ export const useCartprod = () => {
 export const useAddToWishlist = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ productId, userId }) =>
+        mutationFn: ({ productId }) =>
             axios.post(
                 "https://localhost:3000/api/wishlist",
-                { productId, userId },
-                { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+                { productId },
+                { withCredentials: true }
             ),
         onSuccess: () => {
             queryClient.invalidateQueries(['wishlist']);
@@ -93,10 +100,9 @@ export const useAddToWishlist = () => {
 export const useRemoveFromWishlist = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ productId, userId }) =>
+        mutationFn: ({ productId }) =>
             axios.delete(`https://localhost:3000/api/wishlist/${productId}`, {
-                data: { userId },
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                withCredentials: true,
             }),
         onSuccess: () => {
             queryClient.invalidateQueries(['wishlist']);
@@ -109,16 +115,10 @@ export const useGetWishlist = () => {
     return useQuery({
         queryKey: ['wishlist'],
         queryFn: async () => {
-            const userId = localStorage.getItem("id");
-            if (!userId) {
-                throw new Error("User not logged in");
-            }
             const { data } = await axios.get('https://localhost:3000/api/wishlist', {
-                params: { userId },
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                withCredentials: true
             });
             return data.wishlist;
         },
-        enabled: !!localStorage.getItem('token'),
     });
 };

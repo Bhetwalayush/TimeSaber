@@ -1,6 +1,5 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
@@ -11,6 +10,7 @@ import { useLoginMutation } from "./query";
 
 const RECAPTCHA_SITE_KEY = "6Lcw7pErAAAAAEViXU5I0W0Kq03dg9TyClFmZOn4"; 
 
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +18,26 @@ const LoginPage = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const loginMutation = useLoginMutation();
   const navigate = useNavigate();
+
+  // On mount, check if already logged in and redirect accordingly
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch("https://localhost:3000/api/users/profile", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.role === "admin") {
+            navigate("/admindashboard", { replace: true });
+          } else {
+            navigate("/", { replace: true });
+          }
+        }
+      } catch (e) {
+        // Not logged in, stay on login page
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,26 +51,10 @@ const LoginPage = () => {
       { email, password },
       {
         onSuccess: (response) => {
-          const { token } = response.data;
-          if (token) {
-            localStorage.setItem("token", token);
-            try {
-              const decodedToken = jwtDecode(token);
-              const { userId, name, role } = decodedToken;
-
-              localStorage.setItem("id", userId);
-              localStorage.setItem("name", name);
-              localStorage.setItem("role", role);
-
-              toast.success("Login successful!");
-              ;
-              setTimeout(() => navigate(role === "admin" ? "/admindashboard" : "/"), 1000);
-            } catch (error) {
-              toast.error("Error decoding token");
-            }
-          } else {
-            toast.error("Login failed: No token received");
-          }
+          toast.success("Login successful!");
+          // Use response.data.user.role for redirect
+          const role = response.data?.user?.role || response.data?.role;
+          setTimeout(() => navigate(role === "admin" ? "/admindashboard" : "/"), 1000);
         },
         onError: (error) => {
           toast.error(error.response?.data?.message || "Invalid email or password");

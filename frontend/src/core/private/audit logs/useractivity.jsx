@@ -1,15 +1,15 @@
+import {
+    ArrowBack,
+    CalendarToday,
+    Download,
+    LocationOn,
+    Person,
+    Refresh,
+    Timeline
+} from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { 
-  ArrowBack, 
-  Person, 
-  CalendarToday, 
-  LocationOn,
-  Timeline,
-  Refresh,
-  Download
-} from '@mui/icons-material';
 import Side from '../../../components/sidebar';
 
 const UserActivity = () => {
@@ -25,17 +25,7 @@ const UserActivity = () => {
     uniqueIPs: 0
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token) {
-      toast.error("Please LOGIN");
-      navigate('/login', { replace: true });
-    } else if (role === "user") {
-      toast.error("Access denied: Admins only");
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
+  // No localStorage/token/role check. Auth handled by backend via cookie.
 
   useEffect(() => {
     if (userId) {
@@ -46,19 +36,21 @@ const UserActivity = () => {
   const fetchUserActivity = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      
       const response = await fetch(`https://localhost:3000/api/admin/audit/user/${userId}`, {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-
+      if (response.status === 401 || response.status === 403) {
+        toast.error('Access denied: Admins only');
+        navigate('/login', { replace: true });
+        setLoading(false);
+        return;
+      }
       if (!response.ok) {
         throw new Error('Failed to fetch user activity');
       }
-
       const data = await response.json();
       setUserActivity(data.activities || []);
       setUserInfo(data.userInfo);
@@ -73,18 +65,16 @@ const UserActivity = () => {
 
   const handleExport = async () => {
     try {
-      const token = localStorage.getItem("token");
-      
       const response = await fetch(`https://localhost:3000/api/admin/audit/user/${userId}/export`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include',
       });
-
+      if (response.status === 401 || response.status === 403) {
+        toast.error('Access denied: Admins only');
+        return;
+      }
       if (!response.ok) {
         throw new Error('Failed to export user activity');
       }
-
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -94,7 +84,6 @@ const UserActivity = () => {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      
       toast.success('User activity exported successfully');
     } catch (error) {
       console.error('Error exporting user activity:', error);

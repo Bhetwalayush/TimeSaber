@@ -46,36 +46,8 @@ const Home = () => {
         }
     };
 
-    const handleIncrease = (itemId) => {
-        const item = searchResults.find((item) => item._id === itemId);
-        if (item) {
-            setQuantities((prev) => {
-                const currentQuantity = prev[itemId] || 1;
-                if (currentQuantity < item.item_quantity) {
-                    return { ...prev, [itemId]: currentQuantity + 1 };
-                }
-                return prev;
-            });
-        }
-    };
-
-    const handleDecrease = (itemId) => {
-        setQuantities((prev) => {
-            const currentQuantity = prev[itemId] || 1;
-            if (currentQuantity > 1) {
-                return { ...prev, [itemId]: currentQuantity - 1 };
-            }
-            return prev;
-        });
-    };
-
     const handleAddToCart = (itemId) => {
         const quantity = quantities[itemId] || 1;
-        const userId = localStorage.getItem("id");
-        if (!userId) {
-            toast.error("Please log in first.");
-            return;
-        }
         addToCart(
             { itemId, quantity },
             {
@@ -90,7 +62,6 @@ const Home = () => {
                         position: "top-center",
                         autoClose: 3000,
                     });
-                    console.error("Error adding to cart:", error.response?.data || error.message);
                 },
             }
         );

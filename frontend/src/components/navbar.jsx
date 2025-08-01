@@ -1,5 +1,6 @@
 import { DeliveryDiningOutlined } from "@mui/icons-material";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ChevronDown, Heart, Home, LogIn, Menu, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,64 +13,67 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const navigate = useNavigate();
-  const userRole = localStorage.getItem("role");
+  const queryClient = useQueryClient();
+  // No localStorage role logic; rely on backend for auth.
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(token !== null);
-    if (token) {
-      fetchCartCount();
-      fetchWishlistCount();
-    }
+    // Check login state by attempting to fetch cart/wishlist; if 401, user is not logged in
+    fetchCartCount();
+    fetchWishlistCount();
   }, []);
 
   const fetchCartCount = async () => {
     try {
-      const userId = localStorage.getItem("id");
-      const token = localStorage.getItem("token");
-      if (userId && token) {
-        const response = await axios.get(`https://localhost:3000/api/cart/user/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const items = response.data[0]?.items || [];
-        const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-        setCartCount(totalItems);
-      }
+      const response = await axios.get(`https://localhost:3000/api/cart/user/me`, {
+        withCredentials: true,
+      });
+      const items = response.data[0]?.items || [];
+      const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      setCartCount(totalItems);
+      setIsLoggedIn(true);
     } catch (error) {
-      console.error("Error fetching cart count:", error);
+      setCartCount(0);
+      setIsLoggedIn(false);
     }
   };
 
   const fetchWishlistCount = async () => {
     try {
-      const userId = localStorage.getItem("id");
-      const token = localStorage.getItem("token");
-      if (userId && token) {
-        const response = await axios.get(`https://localhost:3000/api/wishlist?userId=${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setWishlistCount(response.data.wishlist.length || 0);
-      }
+      const response = await axios.get(`https://localhost:3000/api/wishlist`, {
+        withCredentials: true,
+      });
+      setWishlistCount(response.data.wishlist.length || 0);
     } catch (error) {
-      console.error("Error fetching wishlist count:", error);
+      setWishlistCount(0);
     }
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
-    localStorage.removeItem("name");
+  const handleLogout = async () => {
+    try {
+      await axios.post("https://localhost:3000/api/users/logout", {}, { withCredentials: true });
+    } catch (e) {
+      // Ignore errors, just proceed
+    }
     setIsLoggedIn(false);
     setCartCount(0);
     setWishlistCount(0);
+    queryClient.invalidateQueries(["cart"]);
+    queryClient.invalidateQueries(["wishlist"]);
+    navigate("/login"); // SPA navigation to login
   };
 
-  const handleLogoClick = () => {
-    if (userRole === "admin") {
-      navigate("/admindashboard");
-    } else {
+  const handleLogoClick = async () => {
+    try {
+      const res = await axios.get("https://localhost:3000/api/users/profile", { withCredentials: true });
+      const role = res.data?.role || res.data?.user?.role;
+      if (role === "admin") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (e) {
       navigate("/");
     }
   };
@@ -175,49 +179,50 @@ const Navbar = () => {
           </a>
 
           {isLoggedIn ? (
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger className="flex items-center space-x-2 px-3 py-1 rounded-full hover:bg-gray-200 focus:outline-none">
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png"
-        alt="Account"
-        className="w-8 h-8 rounded-full"
-      />
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content
-  className="absolute bg-white shadow-lg rounded-md mt-2 w-48 p-2 z-50"
-  side="left"
-  // align="end"
-  sideOffset={105}
-  // alignOffset={-10030} // 👈 move more to the left
->
-
-
-        <a
-          href="/myprofile"
-          className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 space-x-2"
-        >
-          <svg className="h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A7 7 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-          <span>Account</span>
-        </a>
-        <button
-          onClick={handleLogout}
-          className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 space-x-2"
-        >
-          <LogIn className="text-red-600" size={18} />
-          <span>Logout</span>
-        </button>
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-  </DropdownMenu.Root>
-) : (
-  <a
-    href="/login"
-    className="flex items-center justify-center space-x-1 bg-green-500 hover:bg-green-600 text-white rounded-xl px-5 py-2 text-lg font-semibold"
-  >
-    Login
-  </a>
-)}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger className="flex items-center space-x-2 px-3 py-1 rounded-full hover:bg-gray-200 focus:outline-none">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png"
+                  alt="Account"
+                  className="w-8 h-8 rounded-full"
+                />
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  className="absolute bg-white shadow-lg rounded-md mt-2 w-48 p-2 z-50"
+                  side="left"
+                  sideOffset={105}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigate("/myprofile");
+                    }}
+                    className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100 space-x-2"
+                  >
+                    <svg className="h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A7 7 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <span>Account</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 space-x-2"
+                  >
+                    <LogIn className="text-red-600" size={18} />
+                    <span>Logout</span>
+                  </button>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="flex items-center justify-center space-x-1 bg-green-500 hover:bg-green-600 text-white rounded-xl px-5 py-2 text-lg font-semibold"
+            >
+              Login
+            </button>
+          )}
 
 
         </div>

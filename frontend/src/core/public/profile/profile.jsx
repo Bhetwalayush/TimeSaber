@@ -26,10 +26,9 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
         const response = await axios.get('https://localhost:3000/api/users/profile', {
+          withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`,
             'Cache-Control': 'no-cache'
           }
         });
@@ -46,20 +45,20 @@ const MyProfile = () => {
           profile_picture: userData.profile_picture || ''
         });
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          toast.error("Please LOGIN");
+          navigate("/login", { replace: true });
+        } else {
+          console.error('Error fetching user data:', error);
+        }
       } finally {
         setIsLoading(false);
       }
     };
     fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      toast.error("Please LOGIN");
-      navigate("/login", { replace: true });
-    }
   }, [navigate]);
+
+  // No localStorage/token check. Auth handled by backend via cookie.
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -121,15 +120,14 @@ const MyProfile = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
       let newProfilePicture = formData.profile_picture;
 
       if (selectedFile) {
         const formDataToUpload = new FormData();
         formDataToUpload.append('image', selectedFile);
         const uploadResponse = await axios.post('https://localhost:3000/api/users/uploadImage', formDataToUpload, {
+          withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         });
@@ -146,15 +144,20 @@ const MyProfile = () => {
         phone: formData.phone,
         profile_picture: newProfilePicture
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        withCredentials: true,
       });
       setFormData(prev => ({ ...prev, profile_picture: newProfilePicture }));
       toast.success('Profile updated successfully!');
       setIsEditable(false);
       setSelectedFile(null);
     } catch (error) {
-      console.error('Error saving profile:', error);
-      toast.error('Failed to update profile');
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        toast.error("Please LOGIN");
+        navigate("/login", { replace: true });
+      } else {
+        console.error('Error saving profile:', error);
+        toast.error('Failed to update profile');
+      }
     }
   };
 

@@ -13,10 +13,11 @@ const findAll = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        const { userId, items } = req.body;
+        const { items } = req.body;
+        const userId = req.cookies.userId;
 
         if (!userId || !items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ error: "userId and items array are required" });
+            return res.status(400).json({ error: "userId (from cookie) and items array are required" });
         }
 
         const itemIds = items.map((item) => item.itemId);
@@ -80,7 +81,8 @@ const findById = async (req, res) => {
 
 const findByUserId = async (req, res) => {
     try {
-        const cart = await Cart.findOne({ userId: req.params.id }).populate("items.itemId");
+        const userId = req.cookies.userId;
+        const cart = await Cart.findOne({ userId }).populate("items.itemId");
         if (!cart) {
             return res.status(404).json({ message: "Cart not found for this user" });
         }

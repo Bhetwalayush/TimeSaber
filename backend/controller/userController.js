@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const fs = require("fs");
 const path = require('path');
 const SECRET_KEY = "e48c461823ec94fd9b9f49996e0edb7bfa85ee66a8e86a3de9ce12cf0e657ac1";
-const Creadential = require('../model/Users');
-const nodemailer = require("nodemailer")
+const User = require('../model/Users');
+const nodemailer = require("nodemailer") 
 require("dotenv").config();
  const Otp = require('../model/otp'); 
 const AuditLog = require('../model/auditLog');
@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(confirm_password, 10);
-        const user = new Creadential({ first_name, last_name,phone,address,country,region_state, email, confirm_password: hashedPassword, profile_picture, role });
+        const user = new User({ first_name, last_name,phone,address,country,region_state, email, confirm_password: hashedPassword, profile_picture, role });
         
 
         // Setup Nodemailer Transport
@@ -30,21 +30,7 @@ const signUp = async (req, res) => {
             }
         });
 
-        // Email Content
-        // const mailOptions = {
-        //     from: '"TimeSaber" <process.env.EMAIL_USER>',
-        //     to: user.email,
-        //     subject: "Account Created Successfully",
-        //     html: `
-        //         <h1>Welcome to TimeSaber</h1>
-        //         <p>Your account has been created successfully.</p>
-        //         <p><strong>User ID:</strong> ${user._id}</p>
-        //     `
-        // };
 
-        // Send Email
-        // const info = await transporter.sendMail(mailOptions);
-       
 
         const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -85,7 +71,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const user = await Creadential.findOne({ email });
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(401).json({ message: "User not found. Please sign up." });
@@ -94,7 +80,6 @@ const login = async (req, res) => {
         // Check if account is locked
         if (user.lockUntil && user.lockUntil > Date.now()) {
             const remainingTime = Math.ceil((user.lockUntil - Date.now()) / 1000 / 60);
-            
             // Log account lock attempt
             const lockAuditEntry = new AuditLog({
                 userId: user._id,
@@ -200,6 +185,9 @@ const login = async (req, res) => {
             { expiresIn: "10h" }
         );
 
+        // Set userId in cookie for session
+        res.cookie('userId', user._id.toString(), { httpOnly: false, secure: true, sameSite: 'strict' });
+
         // Add user to request object for audit logging
         req.user = user;
 
@@ -211,8 +199,8 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        // The actual logout logic is handled by the frontend (token removal)
-        // This endpoint is mainly for audit logging purposes
+        // Clear the userId cookie on logout
+        res.clearCookie('userId', { httpOnly: false, secure: true, sameSite: 'strict' });
         res.json({ message: "Logout successful" });
     } catch (error) {
         res.status(500).json({ message: "Error logging out", error: error.message });
@@ -262,7 +250,7 @@ const uploadImage = async (req, res, next) => {
 
 const getuser = async (req, res) => {
     try {
-        const user = await Creadential.find();
+        const user = await User.find();
         res.status(200).json(user);
     }
     catch (e) {
@@ -272,18 +260,11 @@ const getuser = async (req, res) => {
 
 const getProfile = async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]; // Expect "Bearer <token>"
-        if (!token) {
-            return res.status(401).json({ message: "No token provided" });
-        }
-
-        const decoded = jwt.verify(token, SECRET_KEY);
-        const user = await Creadential.findById(decoded.userId);
-
+        // Use req.user set by the authorization middleware
+        const user = req.user;
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
         res.status(200).json({
             first_name: user.first_name,
             last_name: user.last_name,
@@ -295,7 +276,6 @@ const getProfile = async (req, res) => {
             profile_picture: user.profile_picture
         });
     } catch (error) {
-        console.error("Error fetching profile:", error);
         res.status(500).json({ message: "Error fetching profile", error: error.message });
     }
 };
@@ -303,16 +283,11 @@ const getProfile = async (req, res) => {
 // New: Update Profile for Logged-in User
 const updateProfile = async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: "No token provided" });
-        }
-
-        const decoded = jwt.verify(token, SECRET_KEY);
+        const userId = req.user._id; // Use the authenticated user's ID
         const { first_name, last_name, phone, address, country, region_state, email, profile_picture } = req.body;
 
-        const updatedUser = await Creadential.findByIdAndUpdate(
-            decoded.userId,
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
             { first_name, last_name, phone, address, country, region_state, email, profile_picture },
             { new: true, runValidators: true }
         );
@@ -323,7 +298,6 @@ const updateProfile = async (req, res) => {
 
         res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
     } catch (error) {
-        console.error("Error updating profile:", error);
         res.status(500).json({ message: "Error updating profile", error: error.message });
     }
 };
@@ -335,7 +309,7 @@ const forgotPassword = async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        const user = await Creadential.findOne({ email });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -387,7 +361,7 @@ const resetPassword = async (req, res) => {
         }
 
         const decoded = jwt.verify(token, SECRET_KEY);
-        const user = await Creadential.findById(decoded.userId);
+        const user = await User.findById(decoded.userId);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -407,7 +381,7 @@ const resetPassword = async (req, res) => {
   const { email, otp } = req.body;
   const record = await Otp.findOne({ email, otp });
   if (!record) return res.status(400).json({ message: 'Invalid OTP' });
-  await Creadential.findOneAndUpdate({ email }, { verified: true });
+  await User.findOneAndUpdate({ email }, { verified: true });
   await Otp.deleteMany({ email });
   res.status(200).json({ message: 'User verified' });
 };

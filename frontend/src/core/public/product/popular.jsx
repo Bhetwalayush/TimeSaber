@@ -13,7 +13,10 @@ import {
   IconButton,
   Typography,
 } from "@material-tailwind/react";
-import { AddShoppingCartOutlined, ShoppingBagOutlined } from "@mui/icons-material";
+import {
+  AddShoppingCartOutlined,
+  ShoppingBagOutlined,
+} from "@mui/icons-material";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -64,11 +67,6 @@ export const WomanCare = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -76,23 +74,24 @@ export const WomanCare = () => {
           toast.success("Successfully added item to your cart");
         },
         onError: (error) => {
-          console.error("Error adding to cart:", error.response?.data || error.message);
-          toast.error(error.response?.data?.message || "Failed to add the item to your cart");
+          console.error(
+            "Error adding to cart:",
+            error.response?.data || error.message
+          );
+          toast.error(
+            error.response?.data?.message ||
+              "Failed to add the item to your cart"
+          );
         },
       }
     );
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -100,7 +99,7 @@ export const WomanCare = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -121,11 +120,6 @@ export const WomanCare = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -134,8 +128,14 @@ export const WomanCare = () => {
           navigate(`/mycart`);
         },
         onError: (error) => {
-          console.error("Error adding to cart:", error.response?.data || error.message);
-          toast.error(error.response?.data?.message || "Failed to add the item to your cart");
+          console.error(
+            "Error adding to cart:",
+            error.response?.data || error.message
+          );
+          toast.error(
+            error.response?.data?.message ||
+              "Failed to add the item to your cart"
+          );
         },
       }
     );
@@ -155,7 +155,9 @@ export const WomanCare = () => {
       <div className="pt-32 bg-gray-200 h-full overflow-auto">
         <div className="flex items-center justify-center mb-8">
           <div className="border-t border-gray-400 w-24"></div>
-          <Typography className="mx-14 text-2xl font-semibold">Popular</Typography>
+          <Typography className="mx-14 text-2xl font-semibold">
+            Popular
+          </Typography>
           <div className="border-t border-gray-400 w-24"></div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-6 py-4">
@@ -175,7 +177,9 @@ export const WomanCare = () => {
                     }}
                     className="p-2"
                   >
-                    {wishlist?.some((item) => item.productId === product._id) ? (
+                    {wishlist?.some(
+                      (item) => item.productId === product._id
+                    ) ? (
                       <HeartFilled className="h-6 w-6 text-red-500" />
                     ) : (
                       <HeartOutline className="h-6 w-6 text-gray-500" />
@@ -220,7 +224,9 @@ export const WomanCare = () => {
                       handleIncrease(product._id);
                     }}
                     className="bg-gray-300 px-3 py-1 text-lg font-extrabold text-black"
-                    disabled={(quantities[product._id] || 1) >= product.item_quantity}
+                    disabled={
+                      (quantities[product._id] || 1) >= product.item_quantity
+                    }
                   >
                     +
                   </Button>
@@ -258,7 +264,11 @@ export const WomanCare = () => {
         </div>
 
         {selectedProduct && (
-          <Dialog open={openModal} handler={handleCloseModal} className="max-w-lg">
+          <Dialog
+            open={openModal}
+            handler={handleCloseModal}
+            className="max-w-lg"
+          >
             <DialogHeader className="flex justify-between items-center">
               <Typography variant="h5" color="blue-gray">
                 {selectedProduct.item_name}
@@ -268,7 +278,9 @@ export const WomanCare = () => {
                 onClick={() => handleToggleWishlist(selectedProduct._id)}
                 className="p-2"
               >
-                {wishlist?.some((item) => item.productId === selectedProduct._id) ? (
+                {wishlist?.some(
+                  (item) => item.productId === selectedProduct._id
+                ) ? (
                   <HeartFilled className="h-6 w-6 text-red-500" />
                 ) : (
                   <HeartOutline className="h-6 w-6 text-gray-500" />
@@ -288,7 +300,8 @@ export const WomanCare = () => {
                 Available Quantity: {selectedProduct.item_quantity || "N/A"}
               </Typography>
               <Typography color="blue-gray">
-                Description: {selectedProduct.description || "No description available"}
+                Description:{" "}
+                {selectedProduct.description || "No description available"}
               </Typography>
               <div className="flex items-center gap-4">
                 <Typography color="blue-gray" className="font-semibold">
@@ -307,7 +320,10 @@ export const WomanCare = () => {
                 <Button
                   onClick={() => handleIncrease(selectedProduct._id)}
                   className="bg-gray-300 px-3 py-1 text-lg font-extrabold text-black"
-                  disabled={(quantities[selectedProduct._id] || 1) >= selectedProduct.item_quantity}
+                  disabled={
+                    (quantities[selectedProduct._id] || 1) >=
+                    selectedProduct.item_quantity
+                  }
                 >
                   +
                 </Button>
@@ -407,11 +423,6 @@ export const Popular = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -419,23 +430,24 @@ export const Popular = () => {
           toast.success("Successfully added item to your cart");
         },
         onError: (error) => {
-          console.error("Error adding to cart:", error.response?.data || error.message);
-          toast.error(error.response?.data?.message || "Failed to add the item to your cart");
+          console.error(
+            "Error adding to cart:",
+            error.response?.data || error.message
+          );
+          toast.error(
+            error.response?.data?.message ||
+              "Failed to add the item to your cart"
+          );
         },
       }
     );
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -443,7 +455,7 @@ export const Popular = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -464,11 +476,6 @@ export const Popular = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -477,8 +484,14 @@ export const Popular = () => {
           navigate(`/mycart`);
         },
         onError: (error) => {
-          console.error("Error adding to cart:", error.response?.data || error.message);
-          toast.error(error.response?.data?.message || "Failed to add the item to your cart");
+          console.error(
+            "Error adding to cart:",
+            error.response?.data || error.message
+          );
+          toast.error(
+            error.response?.data?.message ||
+              "Failed to add the item to your cart"
+          );
         },
       }
     );
@@ -495,20 +508,19 @@ export const Popular = () => {
   return (
     <>
       <div className="bg-gradient-to-r from-[#ccffff] to-[#00ffff] p-6 rounded-xl shadow-md flex items-center justify-between mb-6">
-  
-  {/* Watch for Women centered */}
-  <h2 className="text-2xl md:text-3xl font-bold text-black text-center flex-1">
-    Popular
-  </h2>
+        {/* Watch for Women centered */}
+        <h2 className="text-2xl md:text-3xl font-bold text-black text-center flex-1">
+          Popular
+        </h2>
 
-  {/* View More on the left */}
-  <button className="text-[#007b7b] font-semibold underline hover:text-[#005f5f] transition">
-    <a href="/popular">View More</a>
-  </button>
+        {/* View More on the left */}
+        <button className="text-[#007b7b] font-semibold underline hover:text-[#005f5f] transition">
+          <a href="/popular">View More</a>
+        </button>
 
-  {/* Right-side space to center title */}
-  <div className="w-[100px]" />
-</div>
+        {/* Right-side space to center title */}
+        <div className="w-[100px]" />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-6 py-8">
         {randomProducts.map((product) => (
           <Card
@@ -571,7 +583,9 @@ export const Popular = () => {
                     handleIncrease(product._id);
                   }}
                   className="bg-gray-300 px-3 py-1 text-lg font-extrabold text-black"
-                  disabled={(quantities[product._id] || 1) >= product.item_quantity}
+                  disabled={
+                    (quantities[product._id] || 1) >= product.item_quantity
+                  }
                 >
                   +
                 </Button>
@@ -614,7 +628,11 @@ export const Popular = () => {
       </center>
 
       {selectedProduct && (
-        <Dialog open={openModal} handler={handleCloseModal} className="max-w-lg">
+        <Dialog
+          open={openModal}
+          handler={handleCloseModal}
+          className="max-w-lg"
+        >
           <DialogHeader className="flex justify-between items-center">
             <Typography variant="h5" color="blue-gray">
               {selectedProduct.item_name}
@@ -624,7 +642,9 @@ export const Popular = () => {
               onClick={() => handleToggleWishlist(selectedProduct._id)}
               className="p-2"
             >
-              {wishlist?.some((item) => item.productId === selectedProduct._id) ? (
+              {wishlist?.some(
+                (item) => item.productId === selectedProduct._id
+              ) ? (
                 <HeartFilled className="h-6 w-6 text-red-500" />
               ) : (
                 <HeartOutline className="h-6 w-6 text-gray-500" />
@@ -644,7 +664,8 @@ export const Popular = () => {
               Available Quantity: {selectedProduct.item_quantity || "N/A"}
             </Typography>
             <Typography color="blue-gray">
-              Description: {selectedProduct.description || "No description available"}
+              Description:{" "}
+              {selectedProduct.description || "No description available"}
             </Typography>
             <div className="flex items-center gap-4">
               <Typography color="blue-gray" className="font-semibold">
@@ -663,7 +684,10 @@ export const Popular = () => {
               <Button
                 onClick={() => handleIncrease(selectedProduct._id)}
                 className="bg-gray-300 px-3 py-1 text-lg font-extrabold text-black"
-                disabled={(quantities[selectedProduct._id] || 1) >= selectedProduct.item_quantity}
+                disabled={
+                  (quantities[selectedProduct._id] || 1) >=
+                  selectedProduct.item_quantity
+                }
               >
                 +
               </Button>

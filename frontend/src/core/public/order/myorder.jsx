@@ -14,43 +14,41 @@ function MyOrders() {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("id");
-        if (!token || !userId) {
-            toast.error("Please LOGIN");
-            navigate("/login", { replace: true });
-        } else {
-            fetchOrders(userId);
-        }
+        fetchOrders();
     }, [navigate]);
 
-    const fetchOrders = async (userId) => {
+    const fetchOrders = async () => {
         try {
-            const response = await axios.get(`https://localhost:3000/api/order/user/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+            const response = await axios.get(`https://localhost:3000/api/order/user/me`, {
+                withCredentials: true,
             });
             setOrders(response.data || []);
         } catch (error) {
-            console.error("Error fetching orders:", error.response?.data || error.message);
-            // toast.error(error.response?.data?.message || "Failed to fetch orders");
-            setOrders([]);
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                toast.error("Please LOGIN");
+                navigate("/login", { replace: true });
+            } else {
+                console.error("Error fetching orders:", error.response?.data || error.message);
+                setOrders([]);
+            }
         }
     };
 
     const handleCancelOrder = async (orderId) => {
         try {
             await axios.delete(`https://localhost:3000/api/order/${orderId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                withCredentials: true,
             });
             setOrders(orders.filter((order) => order._id !== orderId));
             toast.success("Order canceled successfully");
         } catch (error) {
-            console.error("Error canceling order:", error.response?.data || error.message);
-            toast.error(error.response?.data?.message || "Failed to cancel order");
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                toast.error("Please LOGIN");
+                navigate("/login", { replace: true });
+            } else {
+                console.error("Error canceling order:", error.response?.data || error.message);
+                toast.error(error.response?.data?.message || "Failed to cancel order");
+            }
         }
     };
 

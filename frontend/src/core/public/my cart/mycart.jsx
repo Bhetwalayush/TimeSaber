@@ -18,12 +18,7 @@ const Ordercart = () => {
     const [cartId, setCartId] = useState("");
     const { mutate: addToWishlist } = useAddToWishlist();
 
-    useEffect(() => {
-        if (!localStorage.getItem("token")) {
-            toast.error("Please LOGIN");
-            navigate("/login", { replace: true });
-        }
-    }, [navigate]);
+    // No need to check localStorage for token, backend will handle auth via cookie
 
     useEffect(() => {
         fetchData();
@@ -31,23 +26,13 @@ const Ordercart = () => {
 
     const fetchData = async () => {
         try {
-            const userId = localStorage.getItem("id");
-            const token = localStorage.getItem("token");
-            if (userId && token) {
-                const response = await axios.get(
-                    `https://localhost:3000/api/cart/user/${userId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Cache-Control": "no-cache",
-                            Pragma: "no-cache",
-                        },
-                    }
-                );
-                if (response.data.length > 0) {
-                    setCartId(response.data[0]._id);
-                    setCartItems(response.data[0].items || []);
-                }
+            const response = await axios.get(
+                `https://localhost:3000/api/cart`,
+                { withCredentials: true }
+            );
+            if (response.data.length > 0) {
+                setCartId(response.data[0]._id);
+                setCartItems(response.data[0].items || []);
             }
         } catch (error) {
             console.error("Error fetching cart data:", error.response || error);
@@ -75,16 +60,12 @@ const Ordercart = () => {
     const handleDelete = async (cartId, itemId) => {
         try {
             await axios.delete(`https://localhost:3000/api/cart/${cartId}/item/${itemId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                withCredentials: true,
             });
-
             setCartItems((prevCartItems) =>
                 prevCartItems.filter((item) => item.itemId._id !== itemId)
             );
             setSelectedItems((prev) => prev.filter((id) => id !== itemId));
-
             toast.success("Item deleted successfully");
         } catch (error) {
             console.error("Error deleting item:", error);
@@ -94,18 +75,12 @@ const Ordercart = () => {
 
     const handleQuantityChange = async (itemId, newQuantity) => {
         if (newQuantity < 1) return;
-
         try {
             await axios.put(
                 `https://localhost:3000/api/cart/${cartId}/item/${itemId}`,
                 { quantity: newQuantity },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                }
+                { withCredentials: true }
             );
-
             setCartItems((prevCartItems) =>
                 prevCartItems.map((item) =>
                     item.itemId._id === itemId
@@ -113,7 +88,6 @@ const Ordercart = () => {
                         : item
                 )
             );
-
             toast.success("Quantity updated successfully");
         } catch (error) {
             console.error("Error updating quantity:", error);
@@ -122,13 +96,8 @@ const Ordercart = () => {
     };
 
     const handleAddToWishlist = (productId) => {
-        const userId = localStorage.getItem("id");
-        if (!userId) {
-            toast.error("Please log in first.");
-            return;
-        }
         addToWishlist(
-            { productId, userId },
+            { productId },
             {
                 onSuccess: () => toast.success("Added to wishlist"),
                 onError: () => toast.error("Failed to add to wishlist"),
@@ -165,13 +134,6 @@ const Ordercart = () => {
         }
 
         try {
-            const userId = localStorage.getItem("id");
-            const token = localStorage.getItem("token");
-
-            if (!userId || !token) {
-                toast.error("User not authenticated");
-                return;
-            }
             if (!cartId) {
                 toast.error("Cart ID not found!");
                 return;
@@ -189,15 +151,12 @@ const Ordercart = () => {
             const orderResponse = await axios.post(
                 `https://localhost:3000/api/order/`,
                 {
-                    userId,
                     address,
                     phone_no: phone,
                     items: selectedCartItems,
                     total_amount: totalAmount,
                 },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
+                { withCredentials: true }
             );
 
             const orderId = orderResponse.data._id;
@@ -213,6 +172,7 @@ const Ordercart = () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(paymentData),
+                credentials: "include"
             });
 
             if (paymentResponse.ok) {

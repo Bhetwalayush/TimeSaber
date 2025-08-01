@@ -1,5 +1,5 @@
 import { DollarSign, Image as ImageIcon, Package, Plus, ShoppingBag, Trash2, Upload } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,13 +9,7 @@ import { useSaveItem } from './query';
 
 function Additems() {
     const navigate = useNavigate();
-    useEffect(() => {
-        if (!localStorage.getItem("token")) {
-            navigate('/login', { replace: true });
-        } else if (localStorage.getItem("role") === "user") {
-            navigate('/', { replace: true });
-        }
-    }, []);
+    // No localStorage/token/role check. Auth handled by backend via cookie.
 
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
     const saveApi = useSaveItem();

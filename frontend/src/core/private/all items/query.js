@@ -18,8 +18,8 @@ export const useSaveItem = () => {
             return axios.post("https://localhost:3000/api/items", data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },
+                withCredentials: true,
             });
         }
     })
@@ -31,11 +31,8 @@ export const useDeleteItem = () => {
         mutationKey: "DELETE_ITEM_DATA",
         mutationFn: (id) => {
             return axios.delete(`https://localhost:3000/api/items/${id}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-            }
-            );
+                withCredentials: true,
+            });
         }
     })
 
@@ -48,8 +45,8 @@ export const useUpdateItem = () => {
             return axios.put(`https://localhost:3000/api/items/${id}`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },
+                withCredentials: true,
             });
         }
     })

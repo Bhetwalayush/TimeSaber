@@ -4,25 +4,19 @@ const SECRET_KEY = "e48c461823ec94fd9b9f49996e0edb7bfa85ee66a8e86a3de9ce12cf0e65
 const User = require('../model/Users');
 
 function authorization(req, res, next) {
-    const token = req.header("Authorization")?.split(" ")[1];
-    if (!token) {
-        return res.status(401).send({ "message": "Access denied. No token provided." });
+    const userId = req.cookies.userId;
+    if (!userId) {
+        return res.status(401).send({ "message": "Access denied. No userId cookie provided." });
     }
-    try {
-        const verified = jwt.verify(token, SECRET_KEY);
-        // Fetch full user document for audit logging
-        User.findById(verified.userId).then(userDoc => {
-            if (!userDoc) {
-                return res.status(401).send({ "message": "User not found." });
-            }
-            req.user = userDoc;
-            next();
-        }).catch(err => {
-            return res.status(500).send({ "message": "Error fetching user.", error: err.message });
-        });
-    } catch (ex) {
-        return res.status(400).send({ "message": "Invalid token." });
-    }
+    User.findById(userId).then(userDoc => {
+        if (!userDoc) {
+            return res.status(401).send({ "message": "User not found." });
+        }
+        req.user = userDoc;
+        next();
+    }).catch(err => {
+        return res.status(500).send({ "message": "Error fetching user.", error: err.message });
+    });
 }
 
 function authorizeRole(role) {

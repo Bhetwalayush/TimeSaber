@@ -3,7 +3,7 @@ const Cart = require("../model/cart");
 const User = require("../model/Users");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = "e48c461823ec94fd9b9f49996e0edb7bfa85ee66a8e86a3de9ce12cf0e657ac1"; // Use the same SECRET_KEY as creadController.js
+const SECRET_KEY = "e48c461823ec94fd9b9f49996e0edb7bfa85ee66a8e86a3de9ce12cf0e657ac1"; 
 
 const findAll = async (req, res) => {
     try {
@@ -22,7 +22,7 @@ const findAll = async (req, res) => {
 
 const findByUserId = async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const userId = req.cookies.userId;
         const orders = await Order.find({ userId }).populate("items.itemId");
         if (!orders || orders.length === 0) {
             return res.status(404).json({ message: "No orders found for this user" });
@@ -38,10 +38,11 @@ const findByUserId = async (req, res) => {
 
 const saveOrder = async (req, res) => {
     try {
-        const { userId, address, phone_no, items, total_amount } = req.body;
+        const { address, phone_no, items, total_amount } = req.body;
+        const userId = req.cookies.userId;
 
         if (!userId || !address || !phone_no || !items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ error: "All fields are required, and items must be a non-empty array" });
+            return res.status(400).json({ error: "All fields are required, and items must be a non-empty array (userId from cookie)" });
         }
         const user = await User.findById(userId);
         if (!user) {
@@ -73,13 +74,13 @@ const saveOrder = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "vitalflow33@gmail.com",
-                pass: "zogh jnnd cmux ohjt"
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
             }
         });
 
         const mailOptions = {
-            from: '"VitalFlow MedLink" <vitalflow33@gmail.com>',
+            from: '"TimeSaber" <vitalflow33@gmail.com>',
             to: user.email,
             subject: "YOUR ORDER IS Created Successfully",
             html: `

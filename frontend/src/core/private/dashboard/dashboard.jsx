@@ -10,17 +10,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tool
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token) {
-      toast.error("Please LOGIN");
-      navigate('/login', { replace: true });
-    } else if (role === "user") {
-      toast.error("Access denied: Admins only");
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
+  // No localStorage/token/role check. Auth handled by backend via cookie.
 
   const [stats, setStats] = useState({
     users: 0,
@@ -32,7 +22,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://localhost:3000/api/admin/stats');
+        const response = await fetch('https://localhost:3000/api/admin/stats', {
+          credentials: 'include',
+        });
+        if (response.status === 401 || response.status === 403) {
+          toast.error("Access denied: Admins only");
+          navigate('/login', { replace: true });
+          return;
+        }
         const data = await response.json();
         setStats({
           users: data.users || 150,
@@ -42,10 +39,11 @@ const Dashboard = () => {
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
+        toast.error("Failed to fetch dashboard stats");
       }
     };
     fetchStats();
-  }, []);
+  }, [navigate]);
 
   const barData = {
     labels: ['Users', 'Products', 'Carts', 'Orders'],

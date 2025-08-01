@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AdminRoute from "./core/private/adminRoute";
 import Additems from "./core/private/all items/add_items";
 import Allitems from "./core/private/all items/allitems";
 import Allorder from "./core/private/all order/allorder";
@@ -64,7 +65,9 @@ function App() {
             path: "/admindashboard",
             element: (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Dashboard />
+                    <AdminRoute>
+                        <Dashboard />
+                    </AdminRoute>
                 </Suspense>
             ),
         },

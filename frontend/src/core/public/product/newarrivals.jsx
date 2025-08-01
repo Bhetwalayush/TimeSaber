@@ -64,11 +64,6 @@ export const FirstAid = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -84,15 +79,10 @@ export const FirstAid = () => {
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -100,7 +90,7 @@ export const FirstAid = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -121,11 +111,6 @@ export const FirstAid = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -407,11 +392,6 @@ export const NewArrivals = () => {
 
   const handleAddToCart = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
@@ -427,15 +407,10 @@ export const NewArrivals = () => {
   };
 
   const handleToggleWishlist = (productId) => {
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     const isInWishlist = wishlist?.some((item) => item.productId === productId);
     if (isInWishlist) {
       removeFromWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Removed from wishlist"),
           onError: () => toast.error("Failed to remove from wishlist"),
@@ -443,7 +418,7 @@ export const NewArrivals = () => {
       );
     } else {
       addToWishlist(
-        { productId, userId },
+        { productId },
         {
           onSuccess: () => toast.success("Added to wishlist"),
           onError: () => toast.error("Failed to add to wishlist"),
@@ -464,11 +439,6 @@ export const NewArrivals = () => {
 
   const handleBuyNow = (itemId) => {
     const quantity = quantities[itemId] || 1;
-    const userId = localStorage.getItem("id");
-    if (!userId) {
-      toast.error("Please log in first.");
-      return;
-    }
     addToCart(
       { itemId, quantity },
       {
