@@ -9,8 +9,8 @@ const wishlistRoutes = require('./routes/wishlist');
 const auditRoutes = require('./routes/auditRoutes');
 const fs= require("fs")
 const cookieParser = require('cookie-parser');
-// const csrf = require('csurf');
-// const csrfProtection = csrf({ cookie: true });
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 const app = express();
 
 // CORS setup (must be before any routes or middleware)
@@ -27,10 +27,10 @@ const path = require('path');
 const https=require("https");
 
 //Apply CSRF protection
-// app.use('/api', csrfProtection);
-// app.get('/api/csrf-token', (req, res) => {
-//   res.json({ csrfToken: req.csrfToken() });
-// });
+app.use('/api', csrfProtection);
+app.get('/api/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 // Security middleware imports
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -80,9 +80,10 @@ app.use(additionalXssProtection);
 // 4. SQL Injection Protection
 app.use(sqlInjectionProtection);
 
+app.use(fileUploadSecurity);
+
 // 5. NoSQL Injection Protection
 app.use(noSqlInjectionProtection);
-app.use(fileUploadSecurity);
 
 // 6. Request Size Limiting
 app.use(requestSizeLimit);
@@ -177,8 +178,8 @@ try {
     const credentials = { key: privateKey, cert: certificate };
 
     https.createServer(credentials, app).listen(port, () => {
-        console.log(`Server is running on https://localhost:${port}`);
-        console.log('Security middleware enabled: Helmet, XSS-Clean, Rate Limiting, HPP, Mongo Sanitize');
+        //console.log(`Server is running on https://localhost:${port}`);
+        //console.log('Security middleware enabled: Helmet, XSS-Clean, Rate Limiting, HPP, Mongo Sanitize');
     });
 } catch (error) {
     console.error('Error loading certificates:', error);

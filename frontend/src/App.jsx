@@ -36,269 +36,269 @@ const Signup = lazy(() => import("./core/public/users/signup_page"));
 // const FirstAid = lazy(() => import("./core/public/product/travelbags"));
 const queryClient = new QueryClient();
 function App() {
-    const publicRoutes = [
-        {
-            path: "/login",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Login />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/signup",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Signup />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Home />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/admindashboard",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <AdminRoute>
-                        <Dashboard />
-                    </AdminRoute>
-                </Suspense>
-            ),
-        },
-        {
-            path: "/additems",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Additems />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/getitems",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Allitems />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/allusers",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Users />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/allorder",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Allorder />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/myorders",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Myorders />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/womenwatch",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <WatchforWomen />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/popular",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Officebag />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/partybags",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <WomanCare />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/menwatch",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <MenWatch />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/mycart",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Ordercart />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/ourfavorites",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <OurFavorites />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/newarrivals",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Travelbag />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/mycart",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Ordercart />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/payment-success",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Success />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/payment-failed",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Failure />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/search",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <SearchResults />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/mywishlist",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Wishlist />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/myprofile",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Profile />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/contactus",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Contactus />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/FAQ",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <FAQ />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/forgotpassword",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Forgotpw />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/resetpassword",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Resetpassword />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/admin/piechart",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Piechart />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/admin/barchart",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Barchart />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/auditlogs",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <AuditLogs />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/auditstats",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <AuditStats />
-                </Suspense>
-            ),
-        },
-        {
-            path: "/useractivity/:userId",
-            element: (
-                <Suspense fallback={<div>Loading...</div>}>
-                    <UserActivity />
-                </Suspense>
-            ),
-        },
-    ];
+  const publicRoutes = [
+    {
+      path: "/login",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Login />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/signup",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Signup />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Home />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/admindashboard",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <AdminRoute>
+            <Dashboard />
+          </AdminRoute>
+        </Suspense>
+      ),
+    },
+    {
+      path: "/additems",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Additems />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/getitems",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Allitems />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/allusers",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Users />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/allorder",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Allorder />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/myorders",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Myorders />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/womenwatch",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <WatchforWomen />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/popular",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Officebag />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/partybags",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <WomanCare />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/menwatch",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <MenWatch />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/mycart",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Ordercart />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/ourfavorites",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <OurFavorites />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/newarrivals",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Travelbag />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/mycart",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Ordercart />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/payment-success",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Success />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/payment-failed",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Failure />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/search",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchResults />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/mywishlist",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Wishlist />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/myprofile",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Profile />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/contactus",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Contactus />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/FAQ",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <FAQ />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/forgotpassword",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Forgotpw />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/resetpassword",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Resetpassword />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/admin/piechart",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Piechart />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/admin/barchart",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Barchart />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/auditlogs",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <AuditLogs />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/auditstats",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <AuditStats />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/useractivity/:userId",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <UserActivity />
+        </Suspense>
+      ),
+    },
+  ];
 
-    // const privateRoutes=[];
-    const router = createBrowserRouter(publicRoutes);
+  // const privateRoutes=[];
+  const router = createBrowserRouter(publicRoutes);
 
-    return (
-        <>
-            <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
-            </QueryClientProvider>
-        </>
-    );
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </>
+  );
 }
 
 export default App;

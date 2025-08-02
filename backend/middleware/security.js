@@ -245,7 +245,7 @@ const securityLogging = (req, res, next) => {
         }
 
         // Log all requests for monitoring
-        console.log('Request Log:', logData);
+        //console.log('Request Log:', logData);
     });
 
     next();

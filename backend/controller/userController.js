@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const fs = require("fs");
 const path = require('path');
 const SECRET_KEY = "e48c461823ec94fd9b9f49996e0edb7bfa85ee66a8e86a3de9ce12cf0e657ac1";
-const User = require('../model/Users');
-const nodemailer = require("nodemailer") 
+const Creadential = require('../model/Users');
+const nodemailer = require("nodemailer")
 require("dotenv").config();
  const Otp = require('../model/otp'); 
 const AuditLog = require('../model/auditLog');
@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(confirm_password, 10);
-        const user = new User({ first_name, last_name,phone,address,country,region_state, email, confirm_password: hashedPassword, profile_picture, role });
+        const user = new Creadential({ first_name, last_name,phone,address,country,region_state, email, confirm_password: hashedPassword, profile_picture, role });
         
 
         // Setup Nodemailer Transport
@@ -53,7 +53,7 @@ const signUp = async (req, res) => {
         const info =await transporter.sendMail(mailOptions);
         res.status(201).json({ message: "OTP sent to email", email: user.email });
        
-        console.log("Email sent:", info.response);
+        //console.log("Email sent:", info.response);
         await user.save();
         // res.status(201).json({ message: "User created successfully", user, emailInfo: info });
 
@@ -71,7 +71,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const user = await User.findOne({ email });
+        const user = await Creadential.findOne({ email });
 
         if (!user) {
             return res.status(401).json({ message: "User not found. Please sign up." });
@@ -221,7 +221,7 @@ const uploadImage = async (req, res, next) => {
         }
 
         // Log successful upload for debugging
-        console.log('File uploaded successfully:', {
+        //console.log('File uploaded successfully:', {
             originalname: req.file.originalname,
             filename: req.file.filename,
             mimetype: req.file.mimetype,
@@ -250,7 +250,7 @@ const uploadImage = async (req, res, next) => {
 
 const getuser = async (req, res) => {
     try {
-        const user = await User.find();
+        const user = await Creadential.find();
         res.status(200).json(user);
     }
     catch (e) {
@@ -286,7 +286,7 @@ const updateProfile = async (req, res) => {
         const userId = req.user._id; // Use the authenticated user's ID
         const { first_name, last_name, phone, address, country, region_state, email, profile_picture } = req.body;
 
-        const updatedUser = await User.findByIdAndUpdate(
+        const updatedUser = await Creadential.findByIdAndUpdate(
             userId,
             { first_name, last_name, phone, address, country, region_state, email, profile_picture },
             { new: true, runValidators: true }
@@ -309,7 +309,7 @@ const forgotPassword = async (req, res) => {
             return res.status(400).json({ message: "Email is required" });
         }
 
-        const user = await User.findOne({ email });
+        const user = await Creadential.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -344,7 +344,7 @@ const forgotPassword = async (req, res) => {
         };
 
         const info = await transporter.sendMail(mailOptions);
-        console.log("Reset email sent:", info.response);
+        //console.log("Reset email sent:", info.response);
 
         res.status(200).json({ message: "Password reset link sent to your email" });
     } catch (error) {
@@ -361,7 +361,7 @@ const resetPassword = async (req, res) => {
         }
 
         const decoded = jwt.verify(token, SECRET_KEY);
-        const user = await User.findById(decoded.userId);
+        const user = await Creadential.findById(decoded.userId);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -381,7 +381,7 @@ const resetPassword = async (req, res) => {
   const { email, otp } = req.body;
   const record = await Otp.findOne({ email, otp });
   if (!record) return res.status(400).json({ message: 'Invalid OTP' });
-  await User.findOneAndUpdate({ email }, { verified: true });
+  await Creadential.findOneAndUpdate({ email }, { verified: true });
   await Otp.deleteMany({ email });
   res.status(200).json({ message: 'User verified' });
 };

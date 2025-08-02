@@ -6,7 +6,7 @@ exports.createOrder = async (req, res, next) => {
   const orderId = req.params.id; // Use order ID from params
   const transactionUuid = v4(); // Generate unique transaction ID
 
-  console.log("Creating order for cart:", cartId, "Amount:", amount);
+  //console.log("Creating order for cart:", cartId, "Amount:", amount);
 
   const signature = createSignature(
     `total_amount=${amount},transaction_uuid=${transactionUuid},product_code=EPAYTEST`
@@ -39,7 +39,7 @@ exports.verifyPayment = async (req, res, next) => {
     const decodedData = JSON.parse(
       Buffer.from(data, "base64").toString("utf-8")
     );
-    console.log("Esewa Payment Verification Data:", decodedData);
+    //console.log("Esewa Payment Verification Data:", decodedData);
 
     if (decodedData.status !== "COMPLETE") {
       return res.status(400).json({ message: "Payment verification failed" });
@@ -50,13 +50,13 @@ exports.verifyPayment = async (req, res, next) => {
       .map((field) => `${field}=${decodedData[field] || ""}`)
       .join(",");
 
-    console.log("Payment verification message:", message);
+    //console.log("Payment verification message:", message);
 
     const orderId = decodedData.transaction_uuid.split("-")[0]; // Extract order ID
-    console.log("Verified Order ID:", orderId);
+    //console.log("Verified Order ID:", orderId);
 
     if (decodedData.status !== "COMPLETE") {
-      console.log("Payment not completed");
+      //console.log("Payment not completed");
       return res.redirect(`https://localhost:3000/payment-failed`);
     }
 
